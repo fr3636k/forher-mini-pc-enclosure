@@ -9,35 +9,35 @@
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
 </head>
 <body>
-  <header class="site-head"><a class="brand" href="./"><span class="brand-mark">禾</span><span>FORHER <small>設計研究室</small></span></a><span class="version">DESIGN STUDY <b>V1.1</b></span><a class="head-link" href="#design-notes">設計說明 ↗</a></header>
+  <header class="site-head"><a class="brand" href="./"><span class="brand-mark">禾</span><span>FORHER <small>設計研究室</small></span></a><span class="version">DESIGN STUDY <b>V2.0</b></span><a class="head-link" href="#design-notes">設計說明 ↗</a></header>
   <main>
-    <div class="intro"><div><p class="eyebrow">超音波自動錄影設備 / 3D 提案</p><h1>讓操作簡單，<span>讓結構看得懂。</span></h1><p class="intro-copy">小螢幕與讀卡機留在手邊，主機收進側掛木盒。拖曳模型，從每個角度看看。</p></div><div class="concept"><span class="dot"></span>小螢幕版本<span class="concept-sub">概念模型 · 尺寸待實機確認</span></div></div>
+    <div class="intro"><div><p class="eyebrow">超音波自動錄影設備 / 3D 提案</p><h1>讓操作簡單，<span>讓結構看得懂。</span></h1><p class="intro-copy">只保留主機木盒與 USB 讀卡機。從超音波機到盒內設備，旋轉看看每一條線怎麼走。</p></div><div class="concept"><span class="dot"></span>無額外螢幕版本<span class="concept-sub">概念模型 · 尺寸待實機確認</span></div></div>
     <section class="studio" aria-label="3D 模型展示">
       <div class="viewer-column">
         <nav class="views" aria-label="選擇模型視角">
-          <button type="button" data-view="overview" aria-pressed="true">整體外觀</button>
-          <button type="button" data-view="pod" aria-pressed="false">操作座特寫</button>
-          <button type="button" data-view="inside" aria-pressed="false">內部拆解</button>
-          <button type="button" data-view="mounted" aria-pressed="false">側掛位置</button>
+          <button type="button" data-view="overview" aria-pressed="true">超音波旁配置</button>
+          <button type="button" data-view="box" aria-pressed="false">盒子特寫</button>
+          <button type="button" data-view="inside" aria-pressed="false">打開盒蓋</button>
+          <button type="button" data-view="wiring" aria-pressed="false">接線路徑</button>
         </nav>
         <div id="stage" aria-label="拖曳旋轉 3D 模型，滾輪或雙指縮放">
           <div id="loading" role="status">正在準備 3D 模型…</div>
           <div id="hotspots" aria-hidden="true"></div>
-          <div class="stage-top"><span id="view-caption">01 / 整體外觀</span><button id="reset" type="button" aria-label="重設模型視角">↺ 重設視角</button></div>
+          <div class="stage-top"><span id="view-caption">01 / 超音波旁配置</span><button id="reset" type="button" aria-label="重設模型視角">↺ 重設視角</button></div>
           <div class="stage-bottom"><span>拖曳旋轉 · 滾輪 / 雙指縮放</span><span id="scale-caption">主機盒 300 × 280 × 160 mm</span></div>
           <div id="error" hidden role="alert">此瀏覽器無法啟用 3D。請使用新版 Chrome、Edge 或 Safari，並開啟硬體加速。<a href="./preview.png">查看模型圖片</a></div>
         </div>
-        <div class="model-toolbar"><label class="explode-label" for="explode">拆開盒蓋 <span id="explode-value">0%</span></label><input id="explode" type="range" min="0" max="100" value="0" aria-label="盒蓋拆解程度"><label class="check-label"><input id="labels" type="checkbox" checked>顯示標註</label><button id="download" type="button">下載 3D 模型 <span>↓ GLB</span></button></div>
+        <div class="model-toolbar"><label class="explode-label" for="explode">拆開盒蓋 <span id="explode-value">0%</span></label><input id="explode" type="range" min="0" max="100" value="0" aria-label="盒蓋拆解程度"><label class="check-label"><input id="labels" type="checkbox" checked>顯示標註</label><button id="download" type="button">下載完整場景 <span>↓ GLB</span></button></div>
       </div>
       <aside class="details">
-        <div class="detail-title"><span class="detail-index" id="detail-index">01</span><p class="eyebrow">目前展示</p><h2 id="detail-title">兩個盒子，一套流程。</h2></div>
-        <p id="detail-copy">主機與擷取器集中收納，讀卡與確認狀態在手邊完成。兩個盒子之間只需整理好連接線。</p>
-        <dl id="specs"><div><dt>主機盒</dt><dd>300 × 280 × 160 mm</dd></div><div><dt>操作座</dt><dd>200 × 160 × 120 mm</dd></div><div><dt>面板</dt><dd>3.5 吋小螢幕示意</dd></div></dl>
+        <div class="detail-title"><span class="detail-index" id="detail-index">01</span><p class="eyebrow">目前展示</p><h2 id="detail-title">一個盒子，一台讀卡機。</h2></div>
+        <p id="detail-copy">主機與影像擷取器收在盒內，USB 讀卡機獨立固定在超音波平台。</p>
+        <dl id="specs"><div><dt>主機盒</dt><dd>300 × 280 × 160 mm</dd></div><div><dt>讀卡機</dt><dd>USB 連接電腦</dd></div><div><dt>版本</dt><dd>不增加額外螢幕</dd></div></dl>
         <div class="demo"><div class="demo-head"><h3>試試插卡流程</h3><span>僅為展示</span></div><div class="demo-buttons"><button type="button" data-state="ready" aria-pressed="true">待機</button><button type="button" data-state="record" aria-pressed="false">插卡錄影</button><button type="button" data-state="saving" aria-pressed="false">拔卡存檔</button></div><p id="state-note" aria-live="polite">待機：確認設備正常，等待插入健保卡。</p></div>
-        <div class="material"><span class="wood-swatch"></span><div><strong>木紋外殼 × 深色面板</strong><span>可拆螺絲固定，方便維護與更換</span></div></div>
+        <div class="material"><span class="wood-swatch"></span><div><strong>單一木盒 × 外接讀卡機</strong><span>可拆螺絲固定，方便維護與更換</span></div></div>
       </aside>
     </section>
-    <section class="design-notes" id="design-notes" aria-label="設計說明"><div><p class="eyebrow">看模型時，留意這三件事</p><h2>外殼固定，裡面可以換。</h2><p>這是便於討論的 V1.1 外觀與空間模型。操作座因小螢幕版本調整為 200 × 160 × 120 mm，與先前七段顯示器圖面不同。</p></div><ol><li><b>01</b><div><h3>螢幕從背面鎖住</h3><p>可拆前面板與背面支架固定螢幕。圖中尺寸為占位示意，實際開窗依購買型號調整。</p></div></li><li><b>02</b><div><h3>接頭不承受拉力</h3><p>線材先固定在座內，再留餘線連接設備。擷取器與變壓器各有固定位置。</p></div></li><li><b>03</b><div><h3>按得到電源，也修得到主機</h3><p>主機前蓋可拆，保留原廠電源鍵。側掛支架需依原機掛點、承重及風道確認。</p></div></li></ol></section>
+    <section class="design-notes" id="design-notes" aria-label="設計說明"><div><p class="eyebrow">看模型時，留意這三件事</p><h2>外殼固定，裡面可以換。</h2><p>V2.0 拿掉額外小螢幕與操作座，保留一個主機盒和 USB 讀卡機。旁邊的超音波機是通用示意，非實際設備尺寸。</p></div><ol><li><b>01</b><div><h3>HDMI 先進擷取器</h3><p>電腦一般 HDMI 孔是輸出，盒內仍需影像擷取器；除影像與讀卡線外，另需電源與上傳網路。</p></div></li><li><b>02</b><div><h3>接頭不承受拉力</h3><p>線材先固定在座內，再留餘線連接設備。擷取器與變壓器各有固定位置。</p></div></li><li><b>03</b><div><h3>按得到電源，也修得到主機</h3><p>主機前蓋可拆，保留原廠電源鍵。側掛支架需依原機掛點、承重及風道確認。</p></div></li></ol></section><section class="design-notes"><div><p class="eyebrow">自己修改模型</p><h2>可以用 Blender 編輯。</h2><p>下載完整場景 GLB，在 Blender 選「File → Import → glTF 2.0」匯入，改好後另存 .blend。原機螢幕保留；取消的是我們額外加裝的小螢幕。</p></div><div><p>GLB 的木板、主機、擷取器、讀卡機與超音波機都有各自的物件名稱。模型適合調整配置、材質與外觀；精確木工尺寸仍需量測。Blender 修改不會自動回寫這個網頁。</p><p><a href="./models/forher-recorder-v2-scene.glb" download>下載完整場景 GLB</a> · <a href="./models/forher-recorder-v1-1.glb" download>保留的舊版 GLB</a></p></div></section>
   </main>
   <footer><span>FORHER / 超音波錄影盒 3D 設計展示</span><span>模型、卡片與畫面資料均為示意 · 非施工／列印圖檔</span></footer>
   <script type="module" src="./app.js"></script>

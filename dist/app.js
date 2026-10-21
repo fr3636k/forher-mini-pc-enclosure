@@ -8,7 +8,7 @@ try {
 const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
-renderer.domElement.setAttribute('aria-label','可旋轉的木作主機盒與螢幕讀卡操作座');renderer.domElement.setAttribute('role','img');stage.prepend(renderer.domElement);
+renderer.domElement.setAttribute('aria-label','超音波機、單一主機木盒與 USB 讀卡機的 3D 模型');renderer.domElement.setAttribute('role','img');stage.prepend(renderer.domElement);
 const scene=new THREE.Scene();scene.background=new THREE.Color('#eeeee7');
 const camera=new THREE.PerspectiveCamera(34,1,1,12000);camera.position.set(750,540,860);
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,80,20);controls.enableDamping=true;controls.dampingFactor=.075;controls.minDistance=220;controls.maxDistance=4000;controls.maxPolarAngle=Math.PI*.49;
@@ -20,20 +20,22 @@ const product=buildProducts();scene.add(product.root);const cart=buildCart();car
 let view='overview',transition=null,lastState='ready';
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const presets={
-overview:{camera:[750,540,860],target:[0,75,20],caption:'01 / 整體外觀',title:'兩個盒子，一套流程。',copy:'主機與擷取器集中收納，讀卡與確認狀態在手邊完成。兩個盒子之間整理好連接線。',specs:[['主機盒','300 × 280 × 160 mm'],['操作座','200 × 160 × 120 mm'],['面板','3.5 吋小螢幕示意']]},
-pod:{camera:[520,310,620],target:[205,84,150],caption:'02 / 操作座特寫',title:'插一張卡，就能開始。',copy:'上方固定讀卡機，正面小螢幕顯示病人識別與錄影狀態。深色面板以螺絲固定，可單獨更換。',specs:[['外尺寸','200 × 160 × 120 mm'],['木板厚度','9 mm 示意'],['顯示內容','中文、計時與錯誤提示']]},
-inside:{camera:[690,600,860],target:[0,135,20],caption:'03 / 內部拆解',title:'打開，就能維修。',copy:'主機前蓋與上蓋可拆。內部擋塊固定主機，擷取器獨立收納；操作座的螢幕模組由背面支架固定。',specs:[['主機占位','180 × 180 × 80 mm'],['木板厚度','12 mm 示意'],['固定方式','螺絲、擋塊與支架']]},
-mounted:{camera:[1300,950,1500],target:[65,435,10],caption:'04 / 側掛位置示意',title:'主機在側邊，操作在手邊。',copy:'操作座隨超音波推車一起移動。主機盒靠側掛架固定，線材沿機身整理；掛點與承重需依原機確認。',specs:[['操作座','平台上固定'],['主機盒','機側掛架固定'],['原機外形','通用情境示意，非指定機型']]}
+overview:{camera:[1250,970,1450],target:[35,425,0],caption:'01 / 超音波旁配置',title:'一個盒子，一台讀卡機。',copy:'不加操作螢幕。主機盒固定於超音波機側邊，USB 讀卡機固定在平台手邊；超音波機保留原有螢幕。',specs:[['主機盒','300 × 280 × 160 mm'],['錄影觸發','健保卡插入／拔出'],['顯示設備','不增加額外螢幕']]},
+box:{camera:[640,430,760],target:[55,75,5],caption:'02 / 主機盒特寫',title:'外面簡單，裡面可維修。',copy:'木盒內收納迷你電腦與影像擷取器。前蓋可拆，保留按原廠電源鍵與維修的入口。讀卡機獨立固定。',specs:[['外尺寸','300 × 280 × 160 mm'],['板厚','12 mm 示意'],['讀卡機','USB 連接電腦']]},
+inside:{camera:[660,600,850],target:[35,140,15],caption:'03 / 打開盒蓋',title:'擷取器藏在盒內。',copy:'HDMI 先進入影像擷取器，再以 USB 傳給電腦。一般小主機的 HDMI 是輸出，不能直接接收超音波影像。',specs:[['主機占位','180 × 180 × 80 mm'],['右側設備','USB 影像擷取器'],['維修方式','上蓋、前蓋可拆']]},
+wiring:{camera:[1100,870,-1400],target:[30,440,-5],caption:'04 / HDMI 與 USB 接線',title:'影像與身分，各走一條線。',copy:'藍灰色：超音波 HDMI → 盒內擷取器。深灰色：讀卡機 USB → 電腦。線先固定再接設備，避免插孔承重。',specs:[['HDMI','影像輸出 → 擷取器'],['USB','讀卡機 → 電腦'],['另需','電源；上傳另需網路']]}
 };
 const hotspotRoot=document.getElementById('hotspots');const hotspots=[];
 function addHotspot(text,owner,point,views){const el=document.createElement('span');el.className='hotspot';el.textContent=text;hotspotRoot.appendChild(el);hotspots.push({el,owner,point:new THREE.Vector3(...point),views});}
-addHotspot('可拆維修前蓋',product.front,[0,110,146],['overview','inside']);
+addHotspot('單一主機盒',product.main,[0,190,0],['overview']);
+addHotspot('USB 讀卡機',product.reader,[0,62,0],['overview','box']);
+addHotspot('超音波機（示意）',cart,[-50,920,-90],['overview']);
+addHotspot('可拆維修前蓋',product.front,[0,110,146],['box','inside']);
 addHotspot('上蓋可拆',product.lid,[0,160,-15],['inside']);
-addHotspot('3.5 吋狀態小螢幕',product.screenAssembly,[0,93,90],['overview','pod']);
-addHotspot('讀卡機獨立固定',product.podLid,[0,156,-20],['pod']);
-addHotspot('主機與擷取器',product.main,[-5,108,30],['inside']);
-addHotspot('隨車移動的操作座',product.pod,[0,155,0],['mounted']);
-addHotspot('側掛盒／掛點待確認',product.main,[0,170,0],['mounted']);
+addHotspot('迷你電腦',product.main,[-30,115,-22],['inside']);
+addHotspot('影像擷取器',product.main,[108,72,-8],['inside']);
+addHotspot('HDMI 影像輸入',cart,[190,405,-166],['wiring']);
+addHotspot('USB 讀卡線',cart,[80,580,-150],['wiring']);
 function updateHotspots(){
   const enabled=document.getElementById('labels').checked;
   hotspots.forEach(h=>{const p=h.owner.localToWorld(h.point.clone()).project(camera);const visible=enabled&&h.views.includes(view)&&p.z<1&&p.z>-1&&Math.abs(p.x)<.94&&Math.abs(p.y)<.86;h.el.hidden=!visible;if(visible){h.el.style.left=`${(p.x*.5+.5)*stage.clientWidth}px`;h.el.style.top=`${(-p.y*.5+.5)*stage.clientHeight}px`;}});
@@ -46,25 +48,26 @@ function frame(){
   if(reduced){camera.position.copy(pos);controls.target.copy(target);}else transition={start:performance.now(),from:camera.position.clone(),to:pos,fromTarget:controls.target.clone(),toTarget:target};
 }
 function setView(v){
-  view=v;const p=presets[v];cart.visible=v==='mounted';product.layout(v==='mounted');setExplode(v==='inside'?90:0);
-  product.main.visible=v!=='pod';product.root.children.find(n=>n.name==='External connection cable').visible=v!=='pod';
+  view=v;const p=presets[v];cart.visible=v==='overview'||v==='wiring';product.layout(cart.visible);setExplode(v==='inside'?90:0);
   document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===v)));
   document.getElementById('view-caption').textContent=p.caption;document.getElementById('detail-index').textContent=p.caption.slice(0,2);document.getElementById('detail-title').textContent=p.title;document.getElementById('detail-copy').textContent=p.copy;
   document.getElementById('specs').replaceChildren(...p.specs.map(([a,b])=>{const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=a;dd.textContent=b;row.append(dt,dd);return row;}));
-  document.getElementById('scale-caption').textContent=v==='pod'?'操作座 200 × 160 × 120 mm':v==='mounted'?'原機與掛點僅為情境示意':'主機盒 300 × 280 × 160 mm';frame();
+  document.getElementById('scale-caption').textContent=cart.visible?'超音波機為通用情境示意':'主機盒 300 × 280 × 160 mm';frame();
 }
-function setState(s){lastState=s;product.setState(s);document.querySelectorAll('[data-state]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===s)));document.getElementById('state-note').textContent=s==='record'?'錄影示意：讀卡成功，顯示病人末四碼與計時。':s==='saving'?'拔卡示意：先停止錄影並保存檔案，再安排上傳。':'待機：確認設備正常，等待插入健保卡。';}
+function setState(s){lastState=s;product.setState(s);document.querySelectorAll('[data-state]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===s)));document.getElementById('state-note').textContent=s==='record'?'插卡示意：由電腦程式啟動錄影。讀卡機燈號不能當作錄影成功證明。':s==='saving'?'拔卡示意：先停止錄影並保存檔案，再安排上傳。':'無額外螢幕版本：等待插卡。下方狀態文字只屬於這個展示網頁。';}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
 document.querySelectorAll('[data-state]').forEach(b=>b.addEventListener('click',()=>setState(b.dataset.state)));
 document.getElementById('explode').addEventListener('input',e=>setExplode(e.target.value));document.getElementById('reset').addEventListener('click',frame);
 controls.addEventListener('start',()=>transition=null);
-async function exportModel(){
-  const prev=product.getExplode(),wasMounted=view==='mounted';product.layout(false);product.setExplode(0);product.main.visible=true;product.root.children.find(n=>n.name==='External connection cable').visible=true;
-  product.root.updateMatrixWorld(true);const clone=product.root.clone(true);clone.scale.setScalar(.001);clone.updateMatrixWorld(true);
-  product.layout(wasMounted);product.setExplode(prev);product.main.visible=view!=='pod';product.root.children.find(n=>n.name==='External connection cable').visible=view!=='pod';
+async function exportModel(fullScene=true){
+  const prev=product.getExplode(),wasMounted=cart.visible;
+  product.layout(fullScene);product.setExplode(0);product.root.updateMatrixWorld(true);cart.updateMatrixWorld(true);
+  const clone=new THREE.Group();clone.name=fullScene?'ForHer V2 - ultrasound and recorder scene':'ForHer V2 - recorder box and reader';
+  clone.add(product.root.clone(true));if(fullScene){const context=cart.clone(true);context.visible=true;clone.add(context);}
+  clone.scale.setScalar(.001);clone.updateMatrixWorld(true);product.layout(wasMounted);product.setExplode(prev);
   return new GLTFExporter().parseAsync(clone,{binary:true,onlyVisible:true,maxTextureSize:1024});
 }
-document.getElementById('download').addEventListener('click',async()=>{const button=document.getElementById('download');button.disabled=true;button.textContent='正在準備模型…';try{const data=await exportModel(),blob=new Blob([data],{type:'model/gltf-binary'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='forher-recorder-v1-1.glb';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}catch(e){console.error(e);document.getElementById('state-note').textContent='模型下載失敗，請重新整理後再試。';}finally{button.disabled=false;button.innerHTML='下載 3D 模型 <span>↓ GLB</span>';}});
+document.getElementById('download').addEventListener('click',async()=>{const button=document.getElementById('download');button.disabled=true;button.textContent='正在準備模型…';try{const data=await exportModel(),blob=new Blob([data],{type:'model/gltf-binary'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='forher-recorder-v2-scene.glb';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}catch(e){console.error(e);document.getElementById('state-note').textContent='模型下載失敗，請重新整理後再試。';}finally{button.disabled=false;button.innerHTML='下載完整場景 <span>↓ GLB</span>';}});
 new ResizeObserver(frame).observe(stage);document.getElementById('loading').hidden=true;setView('overview');
 function animate(time){requestAnimationFrame(animate);if(transition){const f=Math.min(1,(time-transition.start)/650),t=1-Math.pow(1-f,3);camera.position.lerpVectors(transition.from,transition.to,t);controls.target.lerpVectors(transition.fromTarget,transition.toTarget,t);if(f===1)transition=null;}controls.update();updateHotspots();renderer.render(scene,camera);}requestAnimationFrame(animate);
 // Local QA and source portability: no backend, accounts or patient data are used.

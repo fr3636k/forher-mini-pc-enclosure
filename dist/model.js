@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 
 // Geometry uses millimetres. The GLB exporter converts the product root to metres.
-export const dimensions = { main: [300, 160, 280], pod: [200, 120, 160], screen: '3.5 inch placeholder' };
+export const dimensions = { main: [300, 160, 280], reader: [116, 24, 88], version: '2.0 no added display' };
 const mat = (color,roughness=.55,metalness=0) => new THREE.MeshStandardMaterial({color,roughness,metalness});
 const graphite=mat('#303939',.48),black=mat('#181f20',.45),rubber=mat('#27302d',.9),steel=mat('#a2aaa5',.28,.8),green=mat('#2f6f5e',.8),white=mat('#e6e9e4',.55);
 
@@ -54,8 +54,8 @@ function cable(parent,name,points,r=2,color='#3a443e'){
 function feet(parent,w,d){for(const x of [-w/2+15,w/2-15])for(const z of [-d/2+15,d/2-15])block(parent,'Non-slip rubber foot',17,5,17,x,-2.5,z,rubber,2);}
 
 export function buildProducts(){
-  const products=group(null,'ForHer ultrasound recorder concept V1.1');
-  products.userData={units:'millimetres before export',design:'V1.1 HDMI display concept',manufacturingReady:false,mainEnvelopeMm:'300 x 280 x 160',podEnvelopeMm:'200 x 160 x 120'};
+  const products=group(null,'ForHer ultrasound recorder concept V2.0');
+  products.userData={units:'millimetres before export',design:'V2.0 single box with external USB reader',manufacturingReady:false,mainEnvelopeMm:'300 x 280 x 160'};
   const main=group(products,'Main enclosure 300W 280D 160H mm');
   feet(main,300,280);block(main,'12mm plywood bottom',300,12,280,0,6,0,oak,1);
   const lid=group(main,'Removable top cover');block(lid,'12mm plywood top',300,12,280,0,154,0,oak,1.2);
@@ -81,60 +81,37 @@ export function buildProducts(){
   for(const x of [-166,-162])block(main,'Hanging bracket illustrative',4,80,28,x,117,-50,steel,1);
   block(main,'Hanging bracket hook',30,6,28,-155,158,-50,steel,1);
 
-  const pod=group(products,'Operator pod 200W 160D 120H mm');feet(pod,200,160);
-  block(pod,'9mm plywood bottom',200,9,160,0,4.5,0,oak,1);
-  const podLid=group(pod,'Removable reader deck');block(podLid,'9mm plywood reader deck',200,9,160,0,115.5,0,oak,1.2);
-  for(const side of [-1,1]){
-    const p=panel(pod,'Operator pod ventilated side',160,102,9,[-20,-10,0].map(y=>[0,y,62,4,1.5]));p.rotation.y=Math.PI/2;p.position.set(side*95.5,60,0);
-  }
-  const pb=panel(pod,'Pod rear cable panel',182,102,9,[[0,-23,42,18,4]]);pb.position.set(0,60,-75.5);
-  const pf=panel(pod,'Plywood front display opening',182,102,9,[[0,2,136,88,3]]);pf.position.set(0,60,75.5);
-  const screenAssembly=group(pod,'Replaceable display front assembly');
-  const face=panel(screenAssembly,'3mm replaceable dark display plate',176,102,3,[[0,3,118,78,2]],graphite);face.position.set(0,60,82);
-  for(const x of [-80,80])for(const y of [18,102])screw(screenAssembly,x,y,84);
-  const bezel=panel(screenAssembly,'Display bezel placeholder',126,88,5,[[0,0,114,74,2]],black);bezel.position.set(0,63,84);
-  const screen=planeText(screenAssembly,'Status display illustrative content',114,74,0,63,87,()=>{});
-  const led=new THREE.Mesh(new THREE.SphereGeometry(2,16,8),new THREE.MeshStandardMaterial({color:'#87b382',emissive:'#295329',emissiveIntensity:.4}));led.position.set(69,30,84);screenAssembly.add(led);
-  label(screenAssembly,'FORHER',34,6,-57,18,84.1,'#9aa99b');
-  block(screenAssembly,'Display PCB placeholder',122,80,2,0,63,66,green,.5);
-  for(const x of [-58,58])for(const y of [25,101])block(screenAssembly,'Insulating standoff',4,4,12,x,y,73,white,.5);
-  const controller=block(pod,'USB control/interface space placeholder',50,12,32,52,24,-40,green,1);
-  label(pod,'USB / HDMI',45,7,0,34,-81,'#78806c').mesh.rotation.y=Math.PI;
-  const reader=group(podLid,'Removable health card reader and cradle');
-  block(reader,'Reader cradle',116,5,88,0,122,-9,graphite,3);
-  block(reader,'Health card reader placeholder',100,19,76,0,134,-9,black,4);
-  block(reader,'Card insertion slot',61,2,1,0,133,29.5,rubber,.4);
-  for(const x of [-55,55])block(reader,'Cradle fixing stop',5,10,40,x,126,-18,graphite,1);
-  const rt=label(reader,'CARD READER',61,8,0,144,-16,'#b8c6b8');rt.mesh.rotation.x=-Math.PI/2;
+  const reader=group(products,'Removable health card reader and cradle');
+  block(reader,'Reader cradle',116,5,88,0,2.5,-9,graphite,3);
+  block(reader,'Health card reader placeholder',100,19,76,0,14,-9,black,4);
+  block(reader,'Card insertion slot',61,2,1,0,13,29.5,rubber,.4);
+  for(const x of [-55,55])block(reader,'Cradle fixing stop',5,10,40,x,6,-18,graphite,1);
+  const rt=label(reader,'CARD READER',61,8,0,24,-16,'#b8c6b8');rt.mesh.rotation.x=-Math.PI/2;
   const card=group(reader,'Demo health card (fictional)');
-  block(card,'Demo card body',54,.9,70,0,133,60,mat('#d8e6d8',.65),1);
-  const cardFace=planeText(card,'Fictional demo card',53,69,0,133.6,60,(ctx,w,h)=>{
+  block(card,'Demo card body',54,.9,70,0,13,60,mat('#d8e6d8',.65),1);
+  const cardFace=planeText(card,'Fictional demo card',53,69,0,13.6,60,(ctx,w,h)=>{
     ctx.fillStyle='#e4eadd';ctx.fillRect(0,0,w,h);ctx.fillStyle='#77977e';ctx.fillRect(0,0,w,h*.16);ctx.fillStyle='#fff';ctx.font=`${h*.075}px sans-serif`;ctx.fillText('DEMO CARD',w*.08,h*.115);
     ctx.fillStyle='#b5a36c';ctx.fillRect(w*.12,h*.28,w*.25,h*.2);ctx.strokeStyle='#867744';ctx.lineWidth=4;ctx.strokeRect(w*.12,h*.28,w*.25,h*.2);ctx.beginPath();ctx.moveTo(w*.24,h*.28);ctx.lineTo(w*.24,h*.48);ctx.moveTo(w*.12,h*.38);ctx.lineTo(w*.37,h*.38);ctx.stroke();
     ctx.fillStyle='#425c4a';ctx.font=`${h*.075}px sans-serif`;ctx.fillText('僅供模型展示',w*.1,h*.66);ctx.font=`${h*.065}px sans-serif`;ctx.fillText('A*****6789',w*.1,h*.8);
   });cardFace.mesh.rotation.x=-Math.PI/2;
-  cable(pod,'Reader USB service loop',[[40,133,-48],[70,130,-69],[70,94,-85],[50,55,-85]],1.6);
-  const link=group(products,'External connection cable');
-  function drawLink(mounted){link.clear();
-    if(mounted)cable(link,'Secured USB connection illustrative',[[2,704,-35],[140,630,-120],[155,400,-145],[250,260,-145]],2.6);
-    else cable(link,'Secured USB connection illustrative',[[253,73,65],[280,30,5],[210,6,-150],[10,6,-210],[-130,45,-155]],2.4);
+  // HDMI is received by a capture device, not the PC's HDMI output.
+  cable(main,'HDMI internal service loop',[[100,31,-134],[123,26,-95],[126,25,28],[108,31,54]],2.6,'#455b65');
+  const link=group(products,'External connection cables');
+  let mounted=false,explodeValue=0,state='ready';
+  function drawLink(){link.clear();
+    if(mounted){
+      cable(link,'USB - card reader to computer',[[-135,583,47],[-150,575,-90],[140,560,-150],[150,385,-145],[270,245,-145]],2.4);
+      cable(link,'HDMI - ultrasound output to capture input',[[99,490,-120],[150,475,-166],[240,315,-164],[370,231,-139]],3,'#455b65');
+    }else{
+      cable(link,'USB - card reader to computer',[[270,13,32],[305,10,-10],[240,5,-185],[70,5,-190],[0,45,-140]],2.4);
+      cable(link,'HDMI input to enclosure',[[100,31,-134],[145,10,-177],[200,5,-205]],3,'#455b65');
+    }
   }
-  let explodeValue=0,state='ready';
-  function setExplode(v){explodeValue=v;lid.position.y=v*150;front.position.z=v*130;podLid.position.y=v*95;screenAssembly.position.z=v*85;}
-  function setState(v){state=v;card.visible=v==='record';
-    const {ctx,canvas,texture}=screen;const w=canvas.width,h=canvas.height;
-    ctx.fillStyle='#101f22';ctx.fillRect(0,0,w,h);ctx.fillStyle='#83b0a1';ctx.font=`500 ${h*.052}px sans-serif`;ctx.fillText('FORHER  /  ULTRASOUND',w*.07,h*.1);
-    ctx.fillStyle='#415453';ctx.fillRect(w*.07,h*.15,w*.86,2);
-    const color=v==='record'?'#f59b85':v==='saving'?'#e2c179':'#a6d0b0';
-    ctx.fillStyle=color;ctx.font=`500 ${h*.117}px sans-serif`;ctx.fillText(v==='record'?'正在錄影':v==='saving'?'存檔中':'等待插卡',w*.07,h*.34);
-    ctx.fillStyle='#edf4e9';ctx.font=`500 ${h*.19}px monospace`;ctx.fillText(v==='record'?'02:35':v==='saving'?'···':'READY',w*.065,h*.6);
-    ctx.fillStyle='#aec4b9';ctx.font=`${h*.063}px sans-serif`;ctx.fillText(v==='ready'?'請插入健保卡':'範例 ID：A*****6789',w*.07,h*.76);
-    ctx.fillStyle='#638477';ctx.font=`${h*.05}px sans-serif`;ctx.fillText(v==='record'?'影像訊號正常':v==='saving'?'請等待檔案完成保存':'設備已就緒',w*.07,h*.9);texture.needsUpdate=true;
-    led.material.color.set(v==='record'?'#db705b':v==='saving'?'#d5ac62':'#87b382');
-  }
-  function layout(mounted=false){main.position.set(mounted?270:-130,mounted?200:0,mounted?-5:-15);pod.position.set(mounted?-50:205,mounted?570:0,mounted?15:150);drawLink(mounted);}
+  function setExplode(v){explodeValue=v;lid.position.y=v*155;front.position.z=v*140;}
+  function setState(v){state=v;card.visible=v==='record';}
+  function layout(withCart=false){mounted=withCart;main.position.set(withCart?270:0,withCart?200:0,withCart?-5:0);reader.position.set(withCart?-175:230,withCart?570:0,withCart?95:80);drawLink();}
   setState('ready');layout();
-  return {root:products,main,pod,card,lid,front,podLid,screenAssembly,setExplode,setState,layout,getExplode:()=>explodeValue,getState:()=>state};
+  return {root:products,main,reader,card,lid,front,capture,link,setExplode,setState,layout,getExplode:()=>explodeValue,getState:()=>state};
 }
 
 export function buildCart(){
@@ -155,5 +132,23 @@ export function buildCart(){
   });
   block(cart,'Approved accessory rail placeholder',12,25,210,147,523,0,steel,2);
   block(cart,'Bracket mounting backplate indicative',8,140,85,115,346,-55,steel,2);
+  // Generic ultrasound console, keyboard, trackball and probe holder.
+  const console=group(cart,'Ultrasound control console');console.position.set(-15,579,-12);console.rotation.x=.06;
+  block(console,'Control panel housing',240,16,190,0,0,0,light,7);
+  block(console,'Keyboard inset',148,2,68,-26,9,-14,dark,3);
+  for(let row=0;row<4;row++)for(let col=0;col<12;col++)block(console,'Keyboard key',9,2,10,-91+col*11,11,-39+row*14,white,1);
+  block(console,'Keyboard spacebar',60,2,9,-25,11,16,white,1);
+  const ball=new THREE.Mesh(new THREE.SphereGeometry(13,24,16),dark);ball.position.set(77,14,35);console.add(ball);
+  for(const x of [45,77,105])for(const z of [-52,-17]){const k=new THREE.Mesh(new THREE.CylinderGeometry(7,7,9,20),steel);k.position.set(x,14,z);console.add(k);}
+  for(let i=0;i<6;i++)block(console,'Function button',13,3,10,-88+i*25,11,61,dark,2);
+  const probeGroup=group(cart,'Ultrasound probes and holder');
+  block(probeGroup,'Probe holder',35,15,125,-260,526,-8,light,4);
+  for(const z of [-43,32]){
+    block(probeGroup,'Probe handle',18,70,21,-260,565,z,white,7);
+    block(probeGroup,'Probe head',33,26,18,-260,611,z,dark,6);
+    cable(probeGroup,'Probe cable',[[-260,526,z],[-295,365,z+20],[-270,288,z+5],[-210,365,z]],2.4);
+  }
+  const hdmiPort=block(cart,'Ultrasound HDMI output placeholder',4,12,22,98,490,-120,black,.7);
+  label(cart,'ULTRASOUND',170,15,-50,434,91,'#c1cbc0');
   return cart;
 }
