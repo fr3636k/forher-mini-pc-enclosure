@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 
 // Geometry uses millimetres. The GLB exporter converts the product root to metres.
-export const dimensions = { main: [300, 160, 280], reader: [116, 24, 88], version: '2.0 no added display' };
+export const dimensions = { main: [220, 100, 220], reader: [116, 24, 88], version: '3.1 compact hinged-door' };
 const mat = (color,roughness=.55,metalness=0) => new THREE.MeshStandardMaterial({color,roughness,metalness});
 const graphite=mat('#303939',.48),black=mat('#181f20',.45),rubber=mat('#27302d',.9),steel=mat('#a2aaa5',.28,.8),green=mat('#2f6f5e',.8),white=mat('#e6e9e4',.55);
 
@@ -54,32 +54,45 @@ function cable(parent,name,points,r=2,color='#3a443e'){
 function feet(parent,w,d){for(const x of [-w/2+15,w/2-15])for(const z of [-d/2+15,d/2-15])block(parent,'Non-slip rubber foot',17,5,17,x,-2.5,z,rubber,2);}
 
 export function buildProducts(){
-  const products=group(null,'ForHer ultrasound recorder concept V2.0');
-  products.userData={units:'millimetres before export',design:'V2.0 single box with external USB reader',manufacturingReady:false,mainEnvelopeMm:'300 x 280 x 160'};
-  const main=group(products,'Main enclosure 300W 280D 160H mm');
-  feet(main,300,280);block(main,'12mm plywood bottom',300,12,280,0,6,0,oak,1);
-  const lid=group(main,'Removable top cover');block(lid,'12mm plywood top',300,12,280,0,154,0,oak,1.2);
+  const products=group(null,'ForHer ultrasound recorder concept V3.1');
+  products.userData={units:'millimetres before export',design:'V3.1 compact enclosure with independent hinged front door',manufacturingReady:false,mainEnvelopeMm:'220 x 220 x 100',computerEnvelopeMm:'124 x 124 x 53.7',plywoodMm:9,cartPlatformWidthMm:589,cartHeightMm:1382,cartDimensionsAreAssumed:true};
+  const main=group(products,'Compact enclosure 220W 220D 100H mm');
+  feet(main,220,220);block(main,'9mm plywood bottom',220,9,220,0,4.5,0,oak,1);
+  const lid=group(main,'Removable top cover');block(lid,'9mm plywood top',220,9,220,0,95.5,0,oak,1);
   for(const side of [-1,1]){
-    const p=panel(main,'Ventilated plywood side',280,136,12,[-30,-18,-6,6,18,30].map(y=>[0,y,122,5,2]));p.rotation.y=Math.PI/2;p.position.set(side*144,80,0);
+    const p=panel(main,'Ventilated plywood side',220,82,9,[-18,-6,6,18].map(y=>[0,y,94,4,1.5]));p.rotation.y=Math.PI/2;p.position.set(side*105.5,50,0);
   }
-  const back=panel(main,'Rear cable access panel',276,136,12,[[0,-33,100,26,5]]);back.position.set(0,80,-134);
-  const front=group(main,'Removable front maintenance panel');block(front,'Front plywood cover',276,136,12,0,80,134,oak,.8);
-  for(const x of [-120,120])for(const y of [26,134])screw(front,x,y,141);
-  label(front,'FORHER',98,15,0,89,141.2,'#4b543e');label(front,'ULTRASOUND RECORDER',100,6,0,66,141.2,'#6d7158');
-  for(const x of [-126,126])for(const z of [-112,112])block(main,'Internal fixing block',18,24,20,x,24,z,edgeOak,.5);
-  block(main,'Removable equipment tray',262,3,240,0,15,0,steel,.7);
-  const pc=group(main,'Replaceable mini PC placeholder 180 x 180 x 80 mm');
-  block(pc,'Mini PC chassis',180,80,180,-30,59,-22,graphite,5);
-  block(pc,'PC top trim',174,1,174,-30,100,-22,black,2);
-  for(let i=0;i<12;i++)block(pc,'PC vent grille',2,1,110,-84+i*10,101,-30,black,.3);
-  const power=new THREE.Mesh(new THREE.CylinderGeometry(5,5,2,24),steel);power.rotation.x=Math.PI/2;power.position.set(34,62,69);pc.add(power);
-  for(const x of [-86,-61]){block(pc,'USB socket',14,7,2,x,61,69,black,.5);block(pc,'USB socket insert',10,2,2.2,x,61,70,mat('#3c7c94'),0);}
-  block(main,'Adjustable left stop',6,19,200,-125,25,-20,steel,.7);block(main,'Adjustable right stop',6,19,200,67,25,-20,steel,.7);
-  const capture=group(main,'USB video capture placeholder');block(capture,'Capture device',58,24,104,108,31,-8,black,3);
-  label(capture,'CAPTURE',42,7,108,33,45,'#afb9ad');block(capture,'Capture front connector',20,10,12,108,31,50,steel,1);
-  cable(main,'Internal USB service loop',[[108,32,-60],[110,28,-107],[50,25,-117],[30,40,-114]],2);
-  for(const x of [-166,-162])block(main,'Hanging bracket illustrative',4,80,28,x,117,-50,steel,1);
-  block(main,'Hanging bracket hook',30,6,28,-155,158,-50,steel,1);
+  const back=panel(main,'Rear cable access panel',202,82,9,[[20,-22,100,18,4]]);back.position.set(0,50,-105.5);
+  const doorPivot=group(main,'Front door hinge pivot - rotate local Y to open');doorPivot.position.set(-100,0,111);
+  const front=group(doorPivot,'Hinged front maintenance door 198 x 78 mm');front.position.set(100,0,-111);
+  block(front,'Front plywood door - 2mm edge clearance',198,78,9,0,50,105.5,oak,.8);
+  block(main,'Hinge mounting backing strip',8,72,8,-97,50,95,edgeOak,.5);
+  for(const y of [28,72]){
+    const pin=new THREE.Mesh(new THREE.CylinderGeometry(2,2,14,16),steel);pin.name='Fixed vertical hinge pin';pin.position.set(-100,y,111);main.add(pin);
+    block(main,'Fixed hinge leaf',7,13,1.2,-105,y,110.8,steel,.3);
+    block(front,'Moving hinge leaf',7,13,1.2,-95,y,110.8,steel,.3);
+    screw(front,-95,y,112);
+  }
+  block(front,'Front door handle',6,23,8,78,50,115,graphite,1.5);
+  block(main,'Magnetic catch backing',7,12,8,94,50,96,graphite,1);
+  block(front,'Magnetic catch strike plate',7,12,1,93,50,100.5,steel,.3);
+  label(front,'FORHER',72,11,0,56,110.2,'#4b543e');label(front,'ULTRASOUND RECORDER',79,5,0,39,110.2,'#6d7158');
+  for(const x of [-94,94])for(const z of [-93,93])block(main,'Internal fixing block',10,16,10,x,17,z,edgeOak,.5);
+  block(main,'Removable equipment tray',196,3,196,0,10.5,0,steel,.5);
+  const pc=group(main,'MSI Cubi N ADL size reference 124 x 124 x 53.7 mm - form illustrative');
+  block(pc,'Mini PC chassis 124x124x53.7',124,53.7,124,-29,42.85,24,graphite,3);
+  block(pc,'PC top trim',120,1,120,-29,70.2,24,black,1.5);
+  for(let i=0;i<9;i++)block(pc,'PC vent grille illustrative',1.6,.6,75,-73+i*11,71,19,black,.3);
+  const power=new THREE.Mesh(new THREE.CylinderGeometry(4,4,1.5,24),steel);power.rotation.x=Math.PI/2;power.position.set(18,42,87);pc.add(power);
+  for(const x of [-64,-43]){block(pc,'USB socket illustrative',13,6,2,x,43,87,black,.5);block(pc,'USB socket insert',9,2,2.2,x,43,88,mat('#3c7c94'),0);}
+  for(const x of [-94,36])block(main,'Adjustable stop',4,12,134,x,18,24,steel,.5);
+  const capture=group(main,'Small USB capture placeholder 45W 90D 20H mm');
+  block(capture,'Capture device - size assumption',45,20,90,67,25,15,black,2);
+  const ct=label(capture,'CAPTURE',32,6,67,35.5,15,'#afb9ad');ct.mesh.rotation.x=-Math.PI/2;
+  block(capture,'HDMI connector faces rear',18,8,12,67,25,-36,steel,.7);
+  cable(main,'Internal USB service loop',[[67,25,62],[90,24,62],[91,22,-65],[-5,30,-74],[-15,40,-40]],1.8);
+  for(const x of [-123,-119])block(main,'Hanging bracket illustrative',4,55,24,x,79,-40,steel,1);
+  block(main,'Hanging bracket hook',24,5,24,-120,105,-40,steel,1);
 
   const reader=group(products,'Removable health card reader and cradle');
   block(reader,'Reader cradle',116,5,88,0,2.5,-9,graphite,3);
@@ -95,23 +108,24 @@ export function buildProducts(){
     ctx.fillStyle='#425c4a';ctx.font=`${h*.075}px sans-serif`;ctx.fillText('僅供模型展示',w*.1,h*.66);ctx.font=`${h*.065}px sans-serif`;ctx.fillText('A*****6789',w*.1,h*.8);
   });cardFace.mesh.rotation.x=-Math.PI/2;
   // HDMI is received by a capture device, not the PC's HDMI output.
-  cable(main,'HDMI internal service loop',[[100,31,-134],[123,26,-95],[126,25,28],[108,31,54]],2.6,'#455b65');
+  cable(main,'HDMI internal service loop',[[67,25,-36],[67,25,-70],[67,25,-110]],2.6,'#455b65');
   const link=group(products,'External connection cables');
-  let mounted=false,explodeValue=0,state='ready';
+  let mounted=false,explodeValue=0,doorAngle=0,state='ready';
   function drawLink(){link.clear();
     if(mounted){
-      cable(link,'USB - card reader to computer',[[-135,583,47],[-150,575,-90],[140,560,-150],[150,385,-145],[270,245,-145]],2.4);
-      cable(link,'HDMI - ultrasound output to capture input',[[99,490,-120],[150,475,-166],[240,315,-164],[370,231,-139]],3,'#455b65');
+      cable(link,'USB - card reader to computer',[[-231.25,896.5,99.25],[-240,890,-140],[225,870,-245],[230,630,-230],[300,458,-120]],2.4);
+      cable(link,'HDMI - ultrasound output to capture input',[[153.45,759.5,-186],[232,730,-257],[280,550,-245],[367,455,-120]],3,'#455b65');
     }else{
-      cable(link,'USB - card reader to computer',[[270,13,32],[305,10,-10],[240,5,-185],[70,5,-190],[0,45,-140]],2.4);
-      cable(link,'HDMI input to enclosure',[[100,31,-134],[145,10,-177],[200,5,-205]],3,'#455b65');
+      cable(link,'USB - card reader to computer',[[250,13,22],[282,10,-20],[225,5,-155],[40,5,-155],[0,28,-110]],2.4);
+      cable(link,'HDMI input to enclosure',[[67,25,-110],[98,12,-148],[150,5,-165]],3,'#455b65');
     }
   }
-  function setExplode(v){explodeValue=v;lid.position.y=v*155;front.position.z=v*140;}
+  function setExplode(v){explodeValue=v;lid.position.y=v*110;}
+  function setDoor(degrees){doorAngle=degrees;doorPivot.rotation.y=-THREE.MathUtils.degToRad(degrees);}
   function setState(v){state=v;card.visible=v==='record';}
-  function layout(withCart=false){mounted=withCart;main.position.set(withCart?270:0,withCart?200:0,withCart?-5:0);reader.position.set(withCart?-175:230,withCart?570:0,withCart?95:80);drawLink();}
+  function layout(withCart=false){mounted=withCart;main.position.set(withCart?300:0,withCart?430:0,withCart?-10:0);reader.position.set(withCart?-271.25:210,withCart?883.5:0,withCart?147.25:70);drawLink();}
   setState('ready');layout();
-  return {root:products,main,reader,card,lid,front,capture,link,setExplode,setState,layout,getExplode:()=>explodeValue,getState:()=>state};
+  return {root:products,main,reader,card,lid,front,doorPivot,capture,link,setExplode,setDoor,setState,layout,getExplode:()=>explodeValue,getDoor:()=>doorAngle,getState:()=>state};
 }
 
 export function buildCart(){
@@ -150,5 +164,8 @@ export function buildCart(){
   }
   const hdmiPort=block(cart,'Ultrasound HDMI output placeholder',4,12,22,98,490,-120,black,.7);
   label(cart,'ULTRASOUND',170,15,-50,434,91,'#c1cbc0');
+  block(cart,'Bracket stand-off support - illustrative',40,70,60,100,346,-55,steel,2);
+  cart.scale.setScalar(1.55);
+  cart.userData={platformWidthMm:589,overallHeightMm:1382,dimensionsAssumed:true};
   return cart;
 }
