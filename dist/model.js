@@ -116,7 +116,7 @@ export function buildProducts(){
   cable(equipment,'HDMI internal service loop',[[67,25,-36],[64,40,-70],[45,50,-110]],2.6,'#455b65');
   const link=group(products,'External connection cables');
   let mounted=false,explodeValue=0,doorAngle=0,state='ready';
-  function drawLink(){link.clear();
+  function drawLink(){link.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});link.clear();
     if(mounted){
       cable(link,'USB - card reader to computer',[[-231.25,896.5,99.25],[-300,890,-140],[-425,870,-245],[-470,630,-230],[-420,480,-120]],2.4);
       cable(link,'HDMI - ultrasound output to capture input',[[-306.9,759.5,-186],[-387,730,-257],[-435,550,-245],[-410,480,-120]],3,'#455b65');
@@ -127,7 +127,7 @@ export function buildProducts(){
   }
   function setExplode(v){explodeValue=v;lid.position.y=v*130;bottom.position.y=-v*65;left.position.x=-v*135;right.position.x=v*135;rear.position.z=-v*135;doorPivot.position.z=111+v*160;mounting.visible=v===0;equipment.visible=v===0;reader.visible=v===0;link.visible=v===0;}
   const boards={A:lid,B:bottom,C:left,D:right,E:rear,F:front};
-  function selectBoard(id){Object.entries(boards).forEach(([key,g])=>g.traverse(o=>{if(!o.isMesh || !o.material?.isMeshStandardMaterial)return;if(!o.userData.originalMaterial)o.userData.originalMaterial=o.material;o.material=o.userData.originalMaterial;if(key===id){o.material=o.material.clone();o.material.emissive.set('#47603b');o.material.emissiveIntensity=.22;}}));}
+  function selectBoard(id){Object.entries(boards).forEach(([key,g])=>g.traverse(o=>{if(!o.isMesh || !o.material?.isMeshStandardMaterial)return;if(!o.userData.originalMaterial)o.userData.originalMaterial=o.material;if(o.material!==o.userData.originalMaterial)o.material.dispose();o.material=o.userData.originalMaterial;if(key===id){o.material=o.material.clone();o.material.emissive.set('#7a2cb0');o.material.emissiveIntensity=.22;}}));}
   function setDoor(degrees){doorAngle=degrees;doorPivot.rotation.y=-THREE.MathUtils.degToRad(degrees);}
   function setState(v){state=v;card.visible=v==='record';}
   function layout(withCart=false){mounted=withCart;main.position.set(withCart?-455:0,withCart?430:0,withCart?-10:0);reader.position.set(withCart?-271.25:210,withCart?883.5:0,withCart?147.25:70);drawLink();}
