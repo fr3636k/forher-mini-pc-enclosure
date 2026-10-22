@@ -20,14 +20,14 @@ const product=buildProducts();scene.add(product.root);const cart=buildCart();car
 let view='overview',transition=null,lastState='ready';
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const presets={
-overview:{camera:[1938,1504,2248],target:[54,659,0],caption:'01 / 配置示意',title:'超音波旁的錄影盒',copy:'主機與擷取器收在木盒內，讀卡機獨立固定；不增設螢幕。',specs:[['木盒外尺寸','220 × 220 × 100 mm'],['主機基準','124 × 124 × 53.7 mm'],['操作','插卡錄影・拔卡存檔']]},
+overview:{camera:[-1938,1504,2248],target:[-120,659,0],caption:'01 / 配置示意',title:'木盒配置於超音波機左側',copy:'以面對操作面板的方向為準：木盒掛左側，右側保留給病床。讀卡機固定在左側平台。',specs:[['木盒外尺寸','220 × 220 × 100 mm'],['主機基準','124 × 124 × 53.7 mm'],['操作','插卡錄影・拔卡存檔']]},
 box:{camera:[470,320,570],target:[45,52,0],caption:'02 / 前門維修',title:'開門即可操作電源',copy:'左鉸鏈、右把手、磁吸關門；上蓋以螺絲固定，可另行拆下維修。',specs:[['門片','198 × 78 × 9 mm'],['門縫','四邊各 2 mm'],['板材','9 mm 夾板']]},
 inside:{camera:[650,480,800],target:[0,70,0],caption:'03 / 六片木板爆炸圖',title:'六片矩形板，直切組裝',copy:'選取下方板件，可查看形狀與開孔位置。所有大圓孔均為 Ø45 mm，以同一支孔鋸加工。',specs:[['板件','上、下、左、右、後、前門'],['組合','平接＋內側木條固定'],['拆解','滑桿控制分離程度']]},
 wiring:{camera:[420,300,-540],target:[0,50,-10],caption:'04 / 後側與右側開孔',title:'兩個方向都能出線',copy:'後側與右側各留 Ø45 mm 穿線孔。從正面面對前門，右手邊即為右側板。',specs:[['後側','HDMI／USB／電源穿線'],['右側','備用出線方向'],['接頭固定','盒內留餘線並固定線身']]}
 };
 const hotspotRoot=document.getElementById('hotspots');const hotspots=[];
 function addHotspot(text,owner,point,views){const el=document.createElement('span');el.className='hotspot';el.textContent=text;hotspotRoot.appendChild(el);hotspots.push({el,owner,point:new THREE.Vector3(...point),views});}
-addHotspot('單一主機盒',product.main,[0,125,0],['overview']);
+addHotspot('左側主機盒',product.main,[0,125,0],['overview']);
 addHotspot('USB 讀卡機',product.reader,[0,62,0],['overview','box']);
 addHotspot('超音波機（示意）',cart,[-50,920,-90],['overview']);
 addHotspot('前門',product.front,[0,72,113],['box']);
@@ -68,7 +68,7 @@ async function exportModel(fullScene=true){
   clone.scale.setScalar(.001);clone.updateMatrixWorld(true);product.layout(wasMounted);product.setExplode(prev);product.setDoor(prevDoor);
   return new GLTFExporter().parseAsync(clone,{binary:true,onlyVisible:true,maxTextureSize:1024});
 }
-document.getElementById('download').addEventListener('click',async()=>{const button=document.getElementById('download');button.disabled=true;button.textContent='正在準備模型…';try{const data=await exportModel(),blob=new Blob([data],{type:'model/gltf-binary'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='forher-recorder-v4.glb';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}catch(e){console.error(e);button.title='模型下載失敗，請重新整理後再試。';}finally{button.disabled=false;button.innerHTML='下載完整場景 <span>↓ GLB</span>';}});
+document.getElementById('download').addEventListener('click',async()=>{const button=document.getElementById('download');button.disabled=true;button.textContent='正在準備模型…';try{const data=await exportModel(),blob=new Blob([data],{type:'model/gltf-binary'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='forher-recorder-v4-1-left.glb';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}catch(e){console.error(e);button.title='模型下載失敗，請重新整理後再試。';}finally{button.disabled=false;button.innerHTML='下載完整場景 <span>↓ GLB</span>';}});
 new ResizeObserver(frame).observe(stage);document.getElementById('loading').hidden=true;setView('overview');
 function animate(time){requestAnimationFrame(animate);if(transition){const f=Math.min(1,(time-transition.start)/650),t=1-Math.pow(1-f,3);camera.position.lerpVectors(transition.from,transition.to,t);controls.target.lerpVectors(transition.fromTarget,transition.toTarget,t);if(f===1)transition=null;}controls.update();updateHotspots();renderer.render(scene,camera);}requestAnimationFrame(animate);
 // Local QA and source portability: no backend, accounts or patient data are used.

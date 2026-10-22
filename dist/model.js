@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 
 // Geometry uses millimetres. The GLB exporter converts the product root to metres.
-export const dimensions = { main: [220, 100, 220], reader: [116, 24, 88], version: '4.0 six-board enclosure' };
+export const dimensions = { main: [220, 100, 220], reader: [116, 24, 88], version: '4.1 left-mounted enclosure' };
 const mat = (color,roughness=.55,metalness=0) => new THREE.MeshStandardMaterial({color,roughness,metalness});
 const graphite=mat('#303939',.48),black=mat('#181f20',.45),rubber=mat('#27302d',.9),steel=mat('#a2aaa5',.28,.8),green=mat('#2f6f5e',.8),white=mat('#e6e9e4',.55);
 
@@ -95,7 +95,7 @@ export function buildProducts(){
   const ct=label(capture,'CAPTURE',32,6,67,35.5,15,'#afb9ad');ct.mesh.rotation.x=-Math.PI/2;
   block(capture,'HDMI connector faces rear',18,8,12,67,25,-36,steel,.7);
   cable(equipment,'Internal USB service loop',[[67,25,62],[90,24,62],[91,22,-65],[-5,30,-74],[-15,40,-40]],1.8);
-  const mounting=group(main,'Mounting bracket');
+  const mounting=group(main,'Right-side bracket for left-of-cart installation');mounting.scale.x=-1;
   for(const x of [-123,-119])block(mounting,'Hanging bracket illustrative',4,55,24,x,79,-40,steel,1);
   block(mounting,'Hanging bracket hook',24,5,24,-120,105,-40,steel,1);
 
@@ -118,8 +118,8 @@ export function buildProducts(){
   let mounted=false,explodeValue=0,doorAngle=0,state='ready';
   function drawLink(){link.clear();
     if(mounted){
-      cable(link,'USB - card reader to computer',[[-231.25,896.5,99.25],[-240,890,-140],[225,870,-245],[230,630,-230],[335,480,-120]],2.4);
-      cable(link,'HDMI - ultrasound output to capture input',[[153.45,759.5,-186],[232,730,-257],[280,550,-245],[345,480,-120]],3,'#455b65');
+      cable(link,'USB - card reader to computer',[[-231.25,896.5,99.25],[-300,890,-140],[-425,870,-245],[-470,630,-230],[-420,480,-120]],2.4);
+      cable(link,'HDMI - ultrasound output to capture input',[[-306.9,759.5,-186],[-387,730,-257],[-435,550,-245],[-410,480,-120]],3,'#455b65');
     }else{
       cable(link,'USB - card reader to computer',[[250,13,22],[282,10,-20],[225,5,-155],[40,5,-155],[35,50,-110]],2.4);
       cable(link,'HDMI input to enclosure',[[45,50,-110],[98,25,-148],[150,5,-165]],3,'#455b65');
@@ -130,7 +130,7 @@ export function buildProducts(){
   function selectBoard(id){Object.entries(boards).forEach(([key,g])=>g.traverse(o=>{if(!o.isMesh || !o.material?.isMeshStandardMaterial)return;if(!o.userData.originalMaterial)o.userData.originalMaterial=o.material;o.material=o.userData.originalMaterial;if(key===id){o.material=o.material.clone();o.material.emissive.set('#47603b');o.material.emissiveIntensity=.22;}}));}
   function setDoor(degrees){doorAngle=degrees;doorPivot.rotation.y=-THREE.MathUtils.degToRad(degrees);}
   function setState(v){state=v;card.visible=v==='record';}
-  function layout(withCart=false){mounted=withCart;main.position.set(withCart?300:0,withCart?430:0,withCart?-10:0);reader.position.set(withCart?-271.25:210,withCart?883.5:0,withCart?147.25:70);drawLink();}
+  function layout(withCart=false){mounted=withCart;main.position.set(withCart?-455:0,withCart?430:0,withCart?-10:0);reader.position.set(withCart?-271.25:210,withCart?883.5:0,withCart?147.25:70);drawLink();}
   setState('ready');layout();
   return {boards,selectBoard,root:products,main,reader,card,lid,front,doorPivot,capture,link,setExplode,setDoor,setState,layout,getExplode:()=>explodeValue,getDoor:()=>doorAngle,getState:()=>state};
 }
@@ -151,8 +151,8 @@ export function buildCart(){
   planeText(monitor,'Ultrasound screen schematic',323,200,0,4,11,(ctx,w,h)=>{
     ctx.fillStyle='#182223';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#72817b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(w*.5,h*.18);ctx.lineTo(w*.12,h*.84);ctx.quadraticCurveTo(w*.5,h*1.03,w*.88,h*.84);ctx.closePath();ctx.stroke();ctx.fillStyle='#495952';ctx.fill();ctx.fillStyle='#7e8c83';ctx.font='26px sans-serif';ctx.fillText('ULTRASOUND / 示意',30,42);
   });
-  block(cart,'Approved accessory rail placeholder',12,25,210,147,523,0,steel,2);
-  block(cart,'Bracket mounting backplate indicative',8,140,85,115,346,-55,steel,2);
+  block(cart,'Approved accessory rail placeholder',12,25,210,-247,523,0,steel,2);
+  block(cart,'Bracket mounting backplate indicative',8,140,85,-215,346,-55,steel,2);
   // Generic ultrasound console, keyboard, trackball and probe holder.
   const console=group(cart,'Ultrasound control console');console.position.set(-15,579,-12);console.rotation.x=.06;
   block(console,'Control panel housing',240,16,190,0,0,0,light,7);
@@ -169,9 +169,9 @@ export function buildCart(){
     block(probeGroup,'Probe head',33,26,18,-260,611,z,dark,6);
     cable(probeGroup,'Probe cable',[[-260,526,z],[-295,365,z+20],[-270,288,z+5],[-210,365,z]],2.4);
   }
-  const hdmiPort=block(cart,'Ultrasound HDMI output placeholder',4,12,22,98,490,-120,black,.7);
+  const hdmiPort=block(cart,'Ultrasound HDMI output placeholder',4,12,22,-198,490,-120,black,.7);
   label(cart,'ULTRASOUND',170,15,-50,434,91,'#c1cbc0');
-  block(cart,'Bracket stand-off support - illustrative',40,70,60,100,346,-55,steel,2);
+  block(cart,'Bracket stand-off support - illustrative',40,70,60,-200,346,-55,steel,2);
   cart.scale.setScalar(1.55);
   cart.userData={platformWidthMm:589,overallHeightMm:1382,dimensionsAssumed:true};
   return cart;
