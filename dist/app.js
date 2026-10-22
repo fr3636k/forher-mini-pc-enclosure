@@ -52,12 +52,15 @@ function frame(){
 function setView(v){
   view=v;const p=presets[v];cart.visible=v==='overview';product.layout(cart.visible);setExplode(v==='inside'?100:0);setDoor(0);product.selectBoard(v==='inside'?document.querySelector('[data-board][aria-pressed=true]')?.dataset.board:null);
   document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===v)));
+  document.querySelector('.view-switch').style.setProperty('--view-index',String(['overview','box','inside','wiring'].indexOf(v)));
   document.getElementById('view-caption').textContent=p.caption;document.getElementById('detail-index').textContent=p.caption.slice(0,2);document.getElementById('detail-title').textContent=p.title;document.getElementById('detail-copy').textContent=p.copy;
   document.getElementById('specs').replaceChildren(...p.specs.map(([a,b])=>{const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=a;dd.textContent=b;row.append(dt,dd);return row;}));
   document.getElementById('scale-caption').textContent=cart.visible?'超音波機為通用情境示意':'主機盒 220 × 220 × 100 mm';frame();
 }
 function setState(s){lastState=s;product.setState(s);invalidateGeometry();}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+const viewButtons=[...document.querySelectorAll('[data-view]')];
+document.querySelector('.view-switch').addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;const current=viewButtons.indexOf(document.activeElement);if(current<0)return;let next;if(e.key==='ArrowRight')next=(current+1)%4;else if(e.key==='ArrowLeft')next=(current+3)%4;else if(e.key==='Home')next=0;else if(e.key==='End')next=3;else return;e.preventDefault();viewButtons[next].focus();setView(viewButtons[next].dataset.view);});
 
 document.getElementById('door-toggle').addEventListener('click',()=>{if(view!=='box'){setView('box');setDoor(105);}else if(product.getDoor()>0){setDoor(0);}else{setExplode(0);setDoor(105);}frame();});
 document.getElementById('explode').addEventListener('input',e=>{const value=e.target.value;if(view!=='inside')setView('inside');setExplode(value);});document.getElementById('reset').addEventListener('click',frame);
