@@ -120,20 +120,8 @@ try {
         ["拆解", "滑桿控制分離程度"],
       ],
     },
-    wiring: {
-      camera: [420, 300, -540],
-      target: [0, 50, -10],
-      caption: "04 / 後側與右側開孔",
-      title: "兩個方向都能出線",
-      copy: "後側與右側各留 Ø45 mm 穿線孔。從正面面對前門，右手邊即為右側板。",
-      specs: [
-        ["後側", "HDMI／USB／電源穿線"],
-        ["右側", "備用出線方向"],
-        ["接頭固定", "盒內留餘線並固定線身"],
-      ],
-    },
     size: {
-      camera: [380,270,440],target: [0,35,0],caption: "05 / 主機尺寸",
+      camera: [380,270,440],target: [0,35,0],caption: "04 / 主機尺寸",
       title: "主機本體放得下",
       copy: "深色為驗證主機，紫框為木盒內部空間。尺寸皆為寬 × 深 × 高。",
       specs: [
@@ -180,8 +168,6 @@ try {
       point,
       ["inside"],
     );
-  addHotspot("後側 Ø45", product.main, [45, 75, -111], ["wiring"]);
-  addHotspot("右側 Ø45", product.main, [111, 75, -70], ["wiring"]);
   addHotspot("寬 14 cm",sizeView,[0,4,101],["size"]);
   addHotspot("深 14 cm",sizeView,[103,4,0],["size"]);
   addHotspot("高 6 cm",sizeView,[-100,45,65],["size"]);
@@ -272,7 +258,7 @@ try {
       .querySelector(".view-switch")
       .style.setProperty(
         "--view-index",
-        String(["overview", "box", "inside", "wiring", "size"].indexOf(v)),
+        String(["overview", "box", "inside", "size"].indexOf(v)),
       );
     document.getElementById("view-caption").textContent = p.caption;
     document.getElementById("detail-index").textContent = p.caption.slice(0, 2);
