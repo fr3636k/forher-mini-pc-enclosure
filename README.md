@@ -21,7 +21,8 @@
       │   ├─ OrbitControls             旋轉、縮放與鏡頭控制
       │   └─ dist/model.js             程序化建立木盒與設備模型
       ├─ dist/boards.js                板件卡片與 3D 模型連動
-      ├─ dist/boards.svg               可下載的板件平面圖
+      ├─ dist/boards.svg               板件平面圖向量來源
+      ├─ dist/豐禾超音波錄影盒-板件設計圖.pdf  網站下載用設計圖
       └─ dist/models/*.glb             可下載／回溯的 3D 模型
 ```
 
@@ -62,7 +63,8 @@
 │  ├─ vendor/                  隨專案提供的第三方函式庫
 │  ├─ app.js                   3D 場景與互動主程式
 │  ├─ boards.js                板件選取邏輯
-│  ├─ boards.svg               板件平面圖
+│  ├─ boards.svg               板件平面圖向量來源
+│  ├─ 豐禾超音波錄影盒-板件設計圖.pdf  網站下載用設計圖
 │  ├─ index.html               網站入口
 │  ├─ model.js                 3D 幾何與模型狀態
 │  └─ style.css                網站樣式
@@ -147,7 +149,8 @@ npm run check
 | 木盒尺寸、孔位、支架、設備與線材 | `dist/model.js` |
 | 視角、相機位置、前門、爆炸圖與下載功能 | `dist/app.js` |
 | 板件卡片點擊後的行為 | `dist/boards.js` |
-| 可下載的板件平面圖 | `dist/boards.svg` |
+| 板件平面圖向量來源 | `dist/boards.svg` |
+| 網站下載的 PDF 設計圖 | `dist/豐禾超音波錄影盒-板件設計圖.pdf` |
 | 可下載的正式 3D 模型 | `dist/models/forher-recorder-v4-1-left.glb` |
 | 本機伺服器行為 | `serve.mjs` |
 | 正式發布目錄 | `.openai/hosting.json`、`netlify.toml` |
@@ -158,7 +161,7 @@ npm run check
 
 1. `dist/model.js` 的 3D 幾何。
 2. `dist/index.html` 的板件卡片與文字。
-3. `dist/boards.svg` 的平面圖。
+3. `dist/boards.svg` 的向量平面圖與網站下載用 PDF。
 4. `木作規格.md` 的製作規格。
 5. `dist/models/` 中提供下載的 GLB。
 6. 預覽圖片、說明文件與網站壓縮檔。
@@ -192,9 +195,38 @@ Blender 中的修改不會自動回寫 `model.js`。目前網頁是以 JavaScrip
 - **V4.2**：套用豐禾紫色品牌視覺，並加入按需重繪與陰影更新最佳化。
 - **V4.3**：簡化板件說明，新增四視角滑動選取列與鍵盤操作。
 
+## Git 提交規範
+
+提交訊息採用 Conventional Commits，格式如下：
+
+```text
+<type>(<scope>): <簡短說明>
+```
+
+`scope` 應使用簡短英文描述影響範圍，例如 `download`、`model`、`ui`、`docs`、`build` 或 `deploy`。若變更沒有明確範圍，可以省略 scope。
+
+| 類型 | 用途 | 本專案範例 |
+| --- | --- | --- |
+| `feat` | 新功能或新內容 | `feat(download): 新增 PDF 設計圖下載` |
+| `fix` | 修正錯誤 | `fix(model): 修正前門旋轉位置` |
+| `docs` | 文件更新 | `docs(readme): 更新部署與維護流程` |
+| `test` | 測試新增或調整 | `test(build): 增加下載檔案檢查` |
+| `refactor` | 不改變功能的程式整理 | `refactor(ui): 整理視角切換邏輯` |
+
+撰寫提交訊息時請遵守以下原則：
+
+- 主旨使用現在式，直接描述這次完成的變更。
+- 主旨保持精簡，結尾不加句號。
+- 一個 commit 只處理一個主要目的；功能、修正與文件若彼此無關應分開提交。
+- 提交前至少執行 `npm run check`，並確認相關下載檔案存在。
+- 若有不相容變更，在類型後加上 `!`，並於 commit body 說明遷移方式，例如 `feat(model)!: 調整尺寸資料格式`。
+
 ## 相關文件
 
 - [技術與部署說明.md](技術與部署說明.md)：部署、維護與網站託管說明。
 - [木作規格.md](木作規格.md)：板件尺寸、孔位與木作組裝方式。
 - [Blender修改說明.md](Blender修改說明.md)：GLB 匯入 Blender 及修改限制。
 - [LIVE-URL.txt](LIVE-URL.txt)：正式展示網址。
+
+## V4.4 主機尺寸
+新增第五視角「主機尺寸」；以 140 × 140 × 60 mm 主機本體對照盒內 202 × 202 × 82 mm，左右各 31 mm、上方 22 mm。此為本體幾何驗證，並非全設備、線材或散熱驗證。尺寸概覽為級距概估，非全市場極值或統計平均；沒有納入較大型主機的完整安裝保證。新增 size-view.js，原木盒及 GLB 尺寸不變。

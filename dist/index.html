@@ -27,8 +27,7 @@
         /><span class="brand-copy"
           ><strong>豐禾醫療</strong
           ><small>FOR HER MFM CLINIC &amp; CARE</small></span
-        ></a
-      ><a class="head-link" href="#boards">板件尺寸 ↘</a>
+        ></a>
     </header>
     <main>
       <div class="intro">
@@ -46,7 +45,7 @@
               ><button data-view="box" aria-pressed="false">前門維修</button
               ><button data-view="inside" aria-pressed="false">
                 木板爆炸圖</button
-              ><button data-view="wiring" aria-pressed="false">出線位置</button>
+              ><button data-view="wiring" aria-pressed="false">出線位置</button><button data-view="size" aria-pressed="false">主機尺寸</button>
             </div>
           </nav>
           <div id="stage">
@@ -78,7 +77,7 @@
               value="0"
               aria-label="木板拆解程度"
             /><label class="check-label"
-              ><input id="labels" type="checkbox" checked />標註</label
+              ><input id="labels" type="checkbox" checked />物件名稱標註</label
             ><button id="download">下載完整場景 <span>↓ GLB</span></button>
           </div>
         </div>
@@ -90,6 +89,7 @@
           </div>
           <p id="detail-copy"></p>
           <dl id="specs"></dl>
+          <div class="size-fit" id="size-fit" hidden><strong>14 × 14 × 6 cm 以內，主機本體可放入。</strong><p>盒內 20.2 × 20.2 × 8.2 cm<br>左右各餘 3.1 cm，上方餘 2.2 cm。</p><small>尺寸為級距參考，非市場極值或統計平均。接線、擷取器與散熱另計。</small></div>
           <div class="connection">
             <b>影像接線</b>
             <p>超音波 HDMI → 擷取器 → 電腦 USB</p>
@@ -102,14 +102,15 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">木作板件 / 單位 mm</p>
-            <h2>六片板件，一目了然</h2>
+            <h2>六片木板設計</h2>
             <p>點選板件，查看對應的 3D 位置。每片 1 件，板厚皆為 9 mm。</p>
           </div>
           <a
             class="drawing-download"
-            href="./boards.svg"
-            download="豐禾超音波錄影盒-設計圖.svg"
-            >下載設計圖 ↓</a
+            href="./豐禾超音波錄影盒-板件設計圖.pdf"
+            download="豐禾超音波錄影盒-板件設計圖.pdf"
+            type="application/pdf"
+            >下載設計圖 <span>↓ PDF</span></a
           >
         </div>
         <div class="board-grid">
@@ -395,10 +396,7 @@
       </section>
     </main>
     <footer>
-      <span>FORHER / 超音波錄影盒</span
-      ><span
-        >尺寸為設計暫定值；依實機、散熱及掛點確認後加工。超音波機為比例示意。</span
-      >
+      <span>FORHER / 超音波錄影盒</span>
     </footer>
     <script type="module" src="./app.js"></script>
     <script type="module" src="./boards.js"></script>

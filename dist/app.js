@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "./vendor/OrbitControls.js";
 import { buildProducts, buildCart } from "./model.js";
+import { buildSizeView } from "./size-view.js";
 
 const stage = document.getElementById("stage");
 try {
@@ -63,6 +64,8 @@ try {
   scene.add(ground);
   const product = buildProducts();
   scene.add(product.root);
+  const sizeView = buildSizeView();
+  scene.add(sizeView);
   const cart = buildCart();
   cart.visible = false;
   scene.add(cart);
@@ -85,8 +88,8 @@ try {
       camera: [-1938, 1504, 2248],
       target: [-120, 659, 0],
       caption: "01 / 配置示意",
-      title: "木盒配置於超音波機左側",
-      copy: "以面對操作面板的方向為準：木盒掛左側，右側保留給病床。讀卡機固定在左側平台。",
+      title: "木盒裝在超音波機左側",
+      copy: "木盒掛左側，右側給病床。讀卡機固定在左側平台。",
       specs: [
         ["木盒外尺寸", "220 × 220 × 100 mm"],
         ["主機基準", "124 × 124 × 53.7 mm"],
@@ -129,6 +132,16 @@ try {
         ["接頭固定", "盒內留餘線並固定線身"],
       ],
     },
+    size: {
+      camera: [380,270,440],target: [0,35,0],caption: "05 / 主機尺寸",
+      title: "主機本體放得下",
+      copy: "深色為驗證主機，紫框為木盒內部空間。尺寸皆為寬 × 深 × 高。",
+      specs: [
+        ["最小參考", "約 7 × 7 × 4.5 cm"],
+        ["平均參考", "約 13 × 13 × 5 cm"],
+        ["最大參考", "約 18 × 18 × 6 cm"],
+      ],
+    },
   };
   const hotspotRoot = document.getElementById("hotspots");
   const hotspots = [];
@@ -169,6 +182,10 @@ try {
     );
   addHotspot("後側 Ø45", product.main, [45, 75, -111], ["wiring"]);
   addHotspot("右側 Ø45", product.main, [111, 75, -70], ["wiring"]);
+  addHotspot("寬 14 cm",sizeView,[0,4,101],["size"]);
+  addHotspot("深 14 cm",sizeView,[103,4,0],["size"]);
+  addHotspot("高 6 cm",sizeView,[-100,45,65],["size"]);
+  addHotspot("盒內 20.2 × 20.2 × 8.2 cm",sizeView,[0,108,-55],["size"]);
   function updateHotspots() {
     const enabled = document.getElementById("labels").checked;
     hotspots.forEach((h) => {
@@ -191,7 +208,7 @@ try {
     product.setDoor(degrees);
     const b = document.getElementById("door-toggle");
     b.setAttribute("aria-pressed", String(degrees > 0));
-    b.textContent = degrees > 0 ? "關閉前門" : "只開前門";
+    b.textContent = degrees > 0 ? "關門" : "開門";
     invalidateGeometry();
   }
   function setExplode(value) {
@@ -230,6 +247,13 @@ try {
     view = v;
     const p = presets[v];
     cart.visible = v === "overview";
+    sizeView.visible = v === "size";
+    product.root.visible = v !== "size";
+    stage.closest('.studio').classList.toggle('size-mode',v === 'size');
+    document.getElementById('size-fit').hidden = v !== 'size';
+    document.getElementById('door-toggle').hidden = v === 'size';
+    document.getElementById('explode').hidden = v === 'size';
+    document.querySelector('.explode-label').hidden = v === 'size';
     product.layout(cart.visible);
     setExplode(v === "inside" ? 100 : 0);
     setDoor(0);
@@ -248,7 +272,7 @@ try {
       .querySelector(".view-switch")
       .style.setProperty(
         "--view-index",
-        String(["overview", "box", "inside", "wiring"].indexOf(v)),
+        String(["overview", "box", "inside", "wiring", "size"].indexOf(v)),
       );
     document.getElementById("view-caption").textContent = p.caption;
     document.getElementById("detail-index").textContent = p.caption.slice(0, 2);
@@ -267,7 +291,7 @@ try {
     );
     document.getElementById("scale-caption").textContent = cart.visible
       ? "超音波機為通用情境示意"
-      : "主機盒 220 × 220 × 100 mm";
+      : view === "size" ? "驗證主機上限 14 × 14 × 6 cm" : "主機盒 220 × 220 × 100 mm";
     frame();
   }
   function setState(s) {
@@ -284,10 +308,10 @@ try {
     const current = viewButtons.indexOf(document.activeElement);
     if (current < 0) return;
     let next;
-    if (e.key === "ArrowRight") next = (current + 1) % 4;
-    else if (e.key === "ArrowLeft") next = (current + 3) % 4;
+    if (e.key === "ArrowRight") next = (current + 1) % viewButtons.length;
+    else if (e.key === "ArrowLeft") next = (current + viewButtons.length - 1) % viewButtons.length;
     else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = 3;
+    else if (e.key === "End") next = viewButtons.length - 1;
     else return;
     e.preventDefault();
     viewButtons[next].focus();

@@ -2,4 +2,6 @@ node_modules/
 *.tar.gz
 *.zip
 qa/
+output/
+tmp/
 .DS_Store

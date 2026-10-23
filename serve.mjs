@@ -8,6 +8,8 @@ const types = {
   ".js": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".pdf": "application/pdf",
   ".glb": "model/gltf-binary",
 };
 const server = http.createServer(async (req, res) => {
