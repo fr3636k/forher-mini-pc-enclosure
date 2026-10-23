@@ -113,7 +113,7 @@ npm run dev
 npm run check
 ```
 
-此指令會檢查 `dist/app.js` 與 `dist/model.js` 的 JavaScript 語法。
+此指令會檢查 `dist/app.js`、`dist/model.js`、`dist/boards.js`、`dist/size-view.js` 與 `serve.mjs` 的 JavaScript 語法。
 
 ## 核心模組
 
