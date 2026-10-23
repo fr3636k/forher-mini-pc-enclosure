@@ -1,6 +1,6 @@
 # GitHub 使用說明
 
-目標公開儲存庫：`fr3636k/forher-ultrasound-enclosure-3d`。
+公開儲存庫：[fr3636k/forher-mini-pc-enclosure](https://github.com/fr3636k/forher-mini-pc-enclosure)。
 
 ## 原始碼與展示網址
 

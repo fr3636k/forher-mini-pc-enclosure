@@ -4,6 +4,8 @@
 
 公開展示：[https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site](https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site)
 
+公開原始碼：[fr3636k/forher-mini-pc-enclosure](https://github.com/fr3636k/forher-mini-pc-enclosure)
+
 這是一個在瀏覽器中展示超音波錄影盒設計的靜態網站。使用者可以旋轉及縮放 3D 模型、切換展示視角、開關前門、查看六片板件爆炸圖，並下載設計圖與 GLB 模型。
 
 網站只負責設計展示，不會操作診間設備、錄影、讀取健保卡或處理病患資料。
