@@ -1,6 +1,6 @@
 # 豐禾｜超音波錄影盒 3D 設計提案
 
-目前版本：**V5.0**
+目前版本：**V6.0**
 
 公開展示：[https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site](https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site)
 
@@ -237,8 +237,10 @@ Blender 中的修改不會自動回寫 `model.js`。目前網頁是以 JavaScrip
 
 GitHub 公開儲存庫與後續提交方式：[GitHub 使用說明](GitHub使用說明.md)。代理提交須遵守 [AGENTS.md](AGENTS.md)。
 
-## V5 設備與接線
+## V6 主機、支撐與線路
 
-新增「設備接線」選項，可看盒內固定、右側雙 J 掛鉤與對外線路；電源、HDMI、USB 分色，可單獨顯示電源或影像。
+「主機與設備」整合盒內配置、主機尺寸及掛鉤支撐；「配置示意」提供整體、全部線路、影像、讀卡與電源切換，檢視線路時木盒自動透明。影像全程藍色、讀卡青色、電源橙色。
 
-詳見 [設備與接線說明](設備與接線說明.md)。新增模組為 dist/equipment-view.js，完整場景下載為 dist/models/forher-recorder-v5-equipment.glb。六片木板尺寸與 PDF 保留，掛鉤鑽孔須依實物五金定位。
+設備直接放在防滑墊上，不加束帶。下方新增支撐木條與雙橡膠墊；照片不能證明把手承重或外殼可承壓，須現場確認。
+
+詳見 [設備與接線說明](設備與接線說明.md)。完整場景下載為 dist/models/forher-recorder-v6-routes.glb。既有 PDF 是六片箱體板件，新增支撐木條與五金依現場量測定尺寸。

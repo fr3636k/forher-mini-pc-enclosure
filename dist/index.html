@@ -45,10 +45,13 @@
               ><button data-view="box" aria-pressed="false">前門維修</button
               ><button data-view="inside" aria-pressed="false">
                 木板爆炸圖</button
-              ><button data-view="size" aria-pressed="false">主機尺寸</button><button data-view="planning" aria-pressed="false">設備接線</button>
+              ><button data-view="planning" aria-pressed="false">主機與設備</button>
             </div>
           </nav>
-          <div class="planning-controls" id="planning-controls" hidden><div role="group" aria-label="設備規劃模式"><button data-plan="internal" aria-pressed="true">盒內設備</button><button data-plan="mount" aria-pressed="false">右側掛鉤</button><button data-plan="io" aria-pressed="false">對外接線</button></div><div id="route-filters" role="group" aria-label="顯示線路" hidden><button data-route="all" aria-pressed="true">全部</button><button data-route="power" aria-pressed="false"><i class="power-dot"></i>電源</button><button data-route="video" aria-pressed="false"><i class="video-dot"></i>影像</button></div></div>
+          <div class="planning-controls" id="overview-controls" role="group" aria-label="線路檢視">
+            <button data-route="none" aria-pressed="true">整體配置</button><button data-route="all" aria-pressed="false">全部線路</button><button data-route="video" aria-pressed="false"><i class="video-dot"></i>影像線</button><button data-route="reader" aria-pressed="false"><i class="reader-dot"></i>讀卡線</button><button data-route="power" aria-pressed="false"><i class="power-dot"></i>電源線</button>
+          </div>
+          <div class="planning-controls" id="planning-controls" hidden><div role="group" aria-label="主機與設備模式"><button data-plan="internal" aria-pressed="true">盒內設備</button><button data-plan="size" aria-pressed="false">主機尺寸</button><button data-plan="mount" aria-pressed="false">掛鉤與支撐</button></div></div>
           <div id="stage">
             <div id="loading" role="status">正在準備 3D 模型…</div>
             <div id="hotspots" aria-hidden="true"></div>
@@ -100,10 +103,10 @@
         </aside>
       </section>
       <section id="meeting-notes" class="meeting-notes" hidden aria-label="會議設備與接線摘要">
-        <div><h3>盒內放什麼？</h3><p>小主機＋既有 USB 擷取卡。主機限位座加束帶；擷取卡用小托架加束帶，線身另做固定。</p></div>
+        <div><h3>盒內放什麼？</h3><p>小主機＋既有 USB 擷取卡。主機與擷取卡直接放在防滑墊上，不加束帶；接頭預留餘線。</p></div>
         <div><h3>變壓器放哪裡？</h3><p>原廠變壓器固定在盒外的獨立托座，保留散熱。只有低壓 DC 線進盒；不把 AC 插座或裸線藏進木盒。</p></div>
         <div><h3>原擷取卡能沿用嗎？</h3><p>影像路徑相同，平板改接小主機。既有擷取卡須確認 Windows／UVC 或原廠驅動、USB 規格及輸出格式，接實機測錄後定案。</p></div>
-        <details class="research-sources"><summary>規格與查核依據</summary><p>MSI Cubi N ADL：124 × 124 × 53.7 mm，附 65W 變壓器。ASUS NUC 14 Essential：135 × 115 × 36 mm，19V／3.42A／65W 外接變壓器。不同型號以原廠規格與隨附電源為準，65W 是額定輸出，並非固定耗電量。</p><p><a href="https://storage-asset.msi.com/datasheet/mini-pcs/id/Cubi-N-ADL.pdf" target="_blank" rel="noopener">MSI 官方規格</a> · <a href="https://www.asus.com/pl/displays-desktops/nucs/nuc-mini-pcs/asus-nuc-14-essential/techspec/" target="_blank" rel="noopener">ASUS 官方規格</a> · <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/usb-video-class-driver-overview" target="_blank" rel="noopener">Microsoft UVC 驅動說明</a></p><p>變壓器、把手與掛鉤尺寸皆為示意。正式製作前確認把手承重、推握空間、風口與實際接頭；此圖不是承重或設備電氣相容性驗證。</p></details>
+        <details class="research-sources"><summary>規格與查核依據</summary><p>MSI Cubi N ADL：124 × 124 × 53.7 mm，附 65W 變壓器。ASUS NUC 14 Essential：135 × 115 × 36 mm，19V／3.42A／65W 外接變壓器。不同型號以原廠規格與隨附電源為準，65W 是額定輸出，並非固定耗電量。</p><p><a href="https://storage-asset.msi.com/datasheet/mini-pcs/id/Cubi-N-ADL.pdf" target="_blank" rel="noopener">MSI 官方規格</a> · <a href="https://www.asus.com/pl/displays-desktops/nucs/nuc-mini-pcs/asus-nuc-14-essential/techspec/" target="_blank" rel="noopener">ASUS 官方規格</a> · <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/usb-video-class-driver-overview" target="_blank" rel="noopener">Microsoft UVC 驅動說明</a></p><p>下方支撐木條依實際間距裁切，末端加兩塊橡膠墊。接觸點需確認可承受頂壓，避開風口與接頭。變壓器、把手與掛鉤尺寸皆為示意。正式製作前確認把手承重、推握空間、風口與實際接頭；此圖不是承重或設備電氣相容性驗證。</p></details>
       </section>
       <section class="board-section" id="boards">
         <div class="section-head">
@@ -398,7 +401,7 @@
           </button>
         </div>
         <p class="board-hint" id="board-hint" aria-live="polite">
-          圓孔統一 Ø45 mm，方便使用同一孔鋸加工。
+          圓孔統一 Ø45 mm。另加下方支撐木條，長度依現場間距裁切；掛鉤與木條示意見「主機與設備」。
         </p>
       </section>
     </main>

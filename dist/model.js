@@ -6,7 +6,7 @@ import { buildFixings, buildRearHandle } from "./equipment-view.js";
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "5.0 equipment and rear-handle mounting",
+  version: "6.0 lower standoff and independent routes",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -336,8 +336,6 @@ export function buildProducts() {
     block(pc, "USB socket illustrative", 13, 6, 2, x, 43, 87, black, 0.5);
     block(pc, "USB socket insert", 9, 2, 2.2, x, 43, 88, mat("#3c7c94"), 0);
   }
-  for (const x of [-94, 36])
-    block(equipment, "Adjustable stop", 4, 12, 134, x, 18, 24, steel, 0.5);
   const capture = group(
     equipment,
     "Small USB capture placeholder 45W 90D 20H mm",
@@ -367,18 +365,6 @@ export function buildProducts() {
     -36,
     steel,
     0.7,
-  );
-  cable(
-    equipment,
-    "Internal USB service loop",
-    [
-      [67, 25, 62],
-      [90, 24, 62],
-      [91, 22, -65],
-      [-5, 30, -74],
-      [-15, 40, -40],
-    ],
-    1.8,
   );
   const {mounting,restraints}=buildFixings();main.add(mounting);equipment.add(restraints);
 
@@ -450,17 +436,6 @@ export function buildProducts() {
   );
   cardFace.mesh.rotation.x = -Math.PI / 2;
   // HDMI is received by a capture device, not the PC's HDMI output.
-  cable(
-    equipment,
-    "HDMI internal service loop",
-    [
-      [67, 25, -36],
-      [64, 40, -70],
-      [45, 50, -110],
-    ],
-    2.6,
-    "#455b65",
-  );
   const link = group(products, "External connection cables");
   let mounted = false,
     explodeValue = 0,
@@ -655,34 +630,10 @@ export function buildCart() {
       ctx.fillText("ULTRASOUND / 示意", 30, 42);
     },
   );
-  block(
-    cart,
-    "Approved accessory rail placeholder",
-    12,
-    25,
-    210,
-    -247,
-    523,
-    0,
-    steel,
-    2,
-  );
-  block(
-    cart,
-    "Bracket mounting backplate indicative",
-    8,
-    140,
-    85,
-    -215,
-    346,
-    -55,
-    steel,
-    2,
-  );
   // Generic ultrasound console, keyboard, trackball and probe holder.
   const console = group(cart, "Ultrasound control console");
   console.position.set(-15, 579, -12);
-  console.rotation.x = 0.06;
+  console.rotation.x = -0.18;
   block(console, "Control panel housing", 240, 16, 190, 0, 0, 0, light, 7);
   block(console, "Keyboard inset", 148, 2, 68, -26, 9, -14, dark, 3);
   for (let row = 0; row < 4; row++)
@@ -741,18 +692,6 @@ export function buildCart() {
     0.7,
   );
   label(cart, "ULTRASOUND", 170, 15, -50, 434, 91, "#c1cbc0");
-  block(
-    cart,
-    "Bracket stand-off support - illustrative",
-    40,
-    70,
-    60,
-    -200,
-    346,
-    -55,
-    steel,
-    2,
-  );
   const rearHandle=buildRearHandle();rearHandle.scale.setScalar(1/1.55);cart.add(rearHandle);
   cart.scale.setScalar(1.55);
   cart.userData = {
