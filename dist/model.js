@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "./vendor/RoundedBoxGeometry.js";
-import { buildFixings, buildRearHandle } from "./equipment-view.js";
+import { buildFixings, buildRearHandle, installation } from "./equipment-view.js";
 
 // Geometry uses millimetres. The GLB exporter converts the product root to metres.
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "6.0 lower standoff and independent routes",
+  version: "7.0 rear-hung enclosure with forward brace",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -541,14 +541,15 @@ export function buildProducts() {
   function layout(withCart = false) {
     mounted = withCart;
     main.position.set(
-      withCart ? -455 : 0,
-      withCart ? 650 : 0,
-      withCart ? -170 : 0,
+      withCart ? installation.box[0] : 0,
+      withCart ? installation.box[1] : 0,
+      withCart ? installation.box[2] : 0,
     );
+    main.rotation.y=withCart?installation.rotationY:0;
     reader.position.set(
-      withCart ? -271.25 : 210,
-      withCart ? 883.5 : 0,
-      withCart ? 147.25 : 70,
+      withCart ? installation.reader[0] : 210,
+      withCart ? installation.reader[1] : 0,
+      withCart ? installation.reader[2] : 70,
     );
     drawLink();
   }
@@ -583,7 +584,7 @@ export function buildCart() {
   );
   const light = mat("#dce0d8", 0.6),
     dark = mat("#586660", 0.6);
-  block(cart, "Cart platform", 380, 22, 355, -50, 559, 0, light, 10);
+  block(cart, "Console support on machine body", 140, 68, 120, -35, 543, -5, light, 8);
   block(cart, "Cart equipment body", 270, 340, 220, -50, 352, -25, light, 12);
   block(cart, "Front equipment recess", 220, 255, 5, -50, 355, 87, dark, 8);
   block(cart, "Lower cart base", 360, 35, 300, -50, 111, 0, light, 12);
@@ -599,7 +600,8 @@ export function buildCart() {
       wh.castShadow = true;
       cart.add(wh);
     }
-  block(cart, "Display stand", 26, 125, 26, -50, 640, -105, dark, 3);
+  block(cart, "Monitor articulated support vertical", 22, 125, 22, -105, 640, -80, dark, 3);
+  block(cart, "Monitor articulated support arm", 100, 18, 22, -75, 700, -80, dark, 3);
   const monitor = group(cart, "Existing ultrasound monitor context");
   monitor.position.set(-50, 776, -90);
   monitor.rotation.x = -0.06;

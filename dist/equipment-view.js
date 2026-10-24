@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 // All dimensions are illustrative millimetres until the actual handle and shell are measured.
 export const installation = {
-  box: [-455, 650, -170], reader: [-271.25, 883.5, 147.25],
-  handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], spacerDepthMm: 54,
+  box: [-160, 650, -480], reader: [-150, 929, 80], rotationY: -Math.PI/2,
+  handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], spacerDepthMm: 157,
 };
 const materials = {
   metal: new THREE.MeshStandardMaterial({color:'#a2aaa5',metalness:.65,roughness:.35}),
@@ -39,9 +39,9 @@ export function buildFixings() {
   }
   const spacer=group('Lower wooden standoff with two rubber contact pads');
   mounting.add(spacer);
-  box(spacer,'Wood spacer - depth cut to measured gap',[54,24,120],[137,23,25],materials.wood);
+  box(spacer,'Wood spacer - depth cut to measured gap',[157,24,120],[188.5,23,25],materials.wood);
   for(const z of [-20,70]) {
-    box(spacer,'Rubber contact pad - verified shell contact only',[4,24,24],[166,23,z],materials.rubber);
+    box(spacer,'Rubber contact pad - verified shell contact only',[4,24,24],[269,23,z],materials.rubber);
     screw(spacer,109,23,z);
   }
   const restraints=group('Loose equipment on non-slip base pads');
@@ -50,12 +50,14 @@ export function buildFixings() {
   return {mounting,restraints};
 }
 
+// Local +X of the enclosure faces the machine front (+world Z) when rear-hung.
+export function mountedPoint([x,y,z]) {
+  const b=installation.box;return [b[0]-z,b[1]+y,b[2]+x];
+}
 export function buildRearHandle() {
-  const g=group('Protruding rear push handle - geometry to verify on actual machine');
-  tube(g,'Left protruding handle section',[[-312,813,-280],[-312,813,-60]],12,'#75817c');
-  tube(g,'Rear grip kept free for pushing',[[-312,813,-280],[160,813,-280]],12,'#75817c');
-  tube(g,'Right handle section',[[160,813,-280],[160,813,-60]],12,'#75817c');
-  for(const x of [-312,160]) tube(g,'Handle support indicative',[[x,813,-60],[x,780,-65],[x*.82,760,-90]],8,'#75817c');
+  const g=group('Rearward protruding handle - no platform above');
+  tube(g,'Rear transverse grip',[[ -290,813,-337],[135,813,-337]],12,'#75817c');
+  for(const x of [-290,135]) tube(g,'Handle projecting backward from body',[[x,813,-180],[x,813,-337]],12,'#75817c');
   return g;
 }
 
@@ -70,14 +72,14 @@ export function buildExternalIO() {
   box(power,'External adapter cradle',[105,4,55],[-185,410,-245]);
   for(const x of [-235,-135]) box(power,'Adapter cradle side lip',[4,16,55],[x,420,-245]);
   tube(power,'AC - outlet to original adapter',[[-760,590,-401],[-680,480,-400],[-410,400,-370],[-230,430,-245]],3.1,'#cc8b32');
-  // All three pass through the rear hole centre (-410,700,-280), with small separation.
-  tube(power,'DC - adapter through rear hole to PC DC input',[[-140,430,-245],[-140,560,-315],[-340,650,-340],[-405,700,-280],[-470,693,-210]],2.4,'#cc8b32');
-  box(power,'PC DC socket indicative',[9,8,4],[-470,693,-210],materials.rubber);
+  // Enclosure rear panel is rotated: its hole is now on world X=-50.
+  tube(power,'DC - adapter through enclosure hole to PC DC input',[[-140,430,-245],[-20,560,-340],[-10,650,-520],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
+  box(power,'PC DC socket indicative',[4,8,9],mountedPoint([-15,43,-40]),materials.rubber);
   const video=group('Video route - HDMI capture and its USB output'); root.add(video);
-  tube(video,'HDMI - ultrasound to existing capture input',[[-306.9,759.5,-186],[-350,755,-330],[-450,735,-340],[-420,700,-280],[-388,675,-206]],3,'#3e7ed4');
-  tube(video,'Video USB - capture to PC',[[-388,675,-108],[-365,674,-90],[-365,674,-245],[-520,680,-245],[-519,693,-83]],2,'#3e7ed4');
+  tube(video,'HDMI - ultrasound to existing capture input',[[-306.9,759.5,-186],[-350,800,-350],[-170,795,-610],[-10,770,-610],[-10,720,-445],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
+  tube(video,'Video USB - capture to PC',[[67,25,62],[90,24,80],[90,24,-75],[-65,30,-75],[-64,43,87]].map(mountedPoint),2,'#3e7ed4');
   const reader=group('Card reader USB route'); root.add(reader);
-  tube(reader,'Reader USB - through rear hole to PC',[[-231.25,896.5,99.25],[-300,890,-140],[-425,850,-300],[-435,740,-315],[-410,700,-280],[-498,693,-83]],2.2,'#22988b');
+  tube(reader,'Reader USB - through enclosure hole to PC',[[-110,942,32],[-300,925,-130],[-320,850,-430],[-10,740,-510],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
   root.userData={units:'mm',adapterDimensionsAssumed:true,outletPositionAssumed:true,sharedMedicalPowerNotValidated:true};
   function setRoute(route) {
     power.visible=route==='all'||route==='power';
@@ -103,14 +105,13 @@ export function buildPlanningView(product,cart) {
   const cutaway=product.main.clone(true); cutaway.position.set(0,0,0); fadeCase(cutaway);
   for(const prefix of ['A Top','Front door hinge','Right-side twin J']) cutaway.children.find(n=>n.name.startsWith(prefix)).visible=false;
   internal.add(cutaway);
-  const hook=group('Upper hooks and lower anti-tilt wooden standoff'); root.add(hook);
-  const hookedCase=product.main.clone(true); hookedCase.position.set(0,0,0); hook.add(hookedCase);
-  tube(hook,'Protruding handle - diameter assumed',[[143,163,-130],[143,163,130]],12,'#75817c');
-  tube(hook,'Handle attachment context',[[143,163,-130],[210,163,-130],[240,120,-130]],8,'#75817c');
-  box(hook,'Machine shell contact plane - must verify load-bearing area',[24,142,200],[180,45,15],new THREE.MeshStandardMaterial({color:'#dce0d8',transparent:true,opacity:.32,depthWrite:false}));
+  const hook=group('Left profile of rear-hung enclosure and forward support'); root.add(hook);
+  const profileCart=cart.clone(true);profileCart.visible=true;
+  profileCart.traverse(o=>{if(o.name==='Probe cable')o.visible=false;});hook.add(profileCart);
+  const hookedCase=product.main.clone(true);hookedCase.position.set(...installation.box);hookedCase.rotation.y=installation.rotationY;hook.add(hookedCase);
   const io=group('Transparent enclosure with full route context'); root.add(io);
   const context=cart.clone(true); context.visible=true; context.traverse(o=>{if(o.name==='Probe cable')o.visible=false;}); io.add(context);
-  const wiredCase=product.main.clone(true); wiredCase.position.set(...installation.box); fadeCase(wiredCase); io.add(wiredCase);
+  const wiredCase=product.main.clone(true); wiredCase.position.set(...installation.box); wiredCase.rotation.y=installation.rotationY; fadeCase(wiredCase); io.add(wiredCase);
   const readerClone=product.reader.clone(true); readerClone.position.set(...installation.reader); io.add(readerClone);
   const external=buildExternalIO(); io.add(external.root);
   function setMode(mode) { internal.visible=mode==='internal'; hook.visible=mode==='mount'; io.visible=mode==='io'; }
