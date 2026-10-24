@@ -1,10 +1,10 @@
 {
   "name": "forher-ultrasound-enclosure-3d",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node serve.mjs",
-    "check": "node --check dist/app.js && node --check dist/model.js && node --check dist/boards.js && node --check dist/size-view.js && node --check serve.mjs"
+    "check": "node --check dist/app.js && node --check dist/model.js && node --check dist/boards.js && node --check dist/size-view.js && node --check dist/equipment-view.js && node --check serve.mjs"
   }
 }

@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "./vendor/RoundedBoxGeometry.js";
+import { buildFixings, buildRearHandle } from "./equipment-view.js";
 
 // Geometry uses millimetres. The GLB exporter converts the product root to metres.
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "4.1 left-mounted enclosure",
+  version: "5.0 equipment and rear-handle mounting",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -379,25 +380,7 @@ export function buildProducts() {
     ],
     1.8,
   );
-  const mounting = group(
-    main,
-    "Right-side bracket for left-of-cart installation",
-  );
-  mounting.scale.x = -1;
-  for (const x of [-123, -119])
-    block(
-      mounting,
-      "Hanging bracket illustrative",
-      4,
-      55,
-      24,
-      x,
-      79,
-      -40,
-      steel,
-      1,
-    );
-  block(mounting, "Hanging bracket hook", 24, 5, 24, -120, 105, -40, steel, 1);
+  const {mounting,restraints}=buildFixings();main.add(mounting);equipment.add(restraints);
 
   const reader = group(products, "Removable health card reader and cradle");
   block(reader, "Reader cradle", 116, 5, 88, 0, 2.5, -9, graphite, 3);
@@ -584,8 +567,8 @@ export function buildProducts() {
     mounted = withCart;
     main.position.set(
       withCart ? -455 : 0,
-      withCart ? 430 : 0,
-      withCart ? -10 : 0,
+      withCart ? 650 : 0,
+      withCart ? -170 : 0,
     );
     reader.position.set(
       withCart ? -271.25 : 210,
@@ -770,6 +753,7 @@ export function buildCart() {
     steel,
     2,
   );
+  const rearHandle=buildRearHandle();rearHandle.scale.setScalar(1/1.55);cart.add(rearHandle);
   cart.scale.setScalar(1.55);
   cart.userData = {
     platformWidthMm: 589,

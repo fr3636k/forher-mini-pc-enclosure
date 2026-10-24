@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "./vendor/OrbitControls.js";
 import { buildProducts, buildCart } from "./model.js";
 import { buildSizeView } from "./size-view.js";
+import { buildPlanningView,buildExternalIO } from "./equipment-view.js";
 
 const stage = document.getElementById("stage");
 try {
@@ -69,6 +70,9 @@ try {
   const cart = buildCart();
   cart.visible = false;
   scene.add(cart);
+  const planning=buildPlanningView(product,cart);scene.add(planning.root);
+  const externalIO=buildExternalIO();scene.add(externalIO.root);
+  let planningMode="internal",planningRoute="all";
   let view = "overview",
     transition = null,
     lastState = "ready";
@@ -131,9 +135,14 @@ try {
       ],
     },
   };
+  const planningPresets={
+    internal:{camera:[450,350,520],target:[0,45,0],caption:"05 / 盒內設備",title:"主機與擷取卡收在盒內",copy:"上蓋與前門省略，方便看清設備與固定方式。",specs:[["小主機","124 × 124 × 53.7 mm"],["既有擷取卡","45 × 90 × 20 mm 示意"],["變壓器","外置，不佔盒內空間"]],detail:'<b>如何固定</b><p>主機：可調限位座＋束帶。<br>擷取卡：小托架＋束帶。<br>線身：固定座束線，接頭留餘線。</p><small>依原廠風口調整束帶位置；變壓器與擷取卡尺寸待實物確認。</small>'},
+    mount:{camera:[480,300,510],target:[55,90,0],caption:"05 / 右側掛鉤",title:"盒體右側，掛住後方把手",copy:"兩只金屬 J 掛鉤跨在推車後方把手的側段，保留中間推握區。",specs:[["承掛","右側雙 J 掛鉤"],["盒壁固定","穿板螺栓＋內側背板"],["防鬆動","防脫束帶＋止擺軟墊"]],detail:'<b>暫定固定方式</b><p>金屬掛鉤承重；內側背板分散拉力。束帶防止向上脫落，軟墊減少晃動。</p><small>把手暫以 Ø24 mm 示意。實際把手外形、承重及掛鉤開口須現場確認。</small>'},
+    io:{camera:[-1910,1390,-2260],target:[-270,655,-180],caption:"05 / 對外接線",title:"原擷取卡，改接小主機",copy:"供電與影像分開走線，保留原本 HDMI 擷取的概念。",specs:[["電源・橙色","插座 → 變壓器 → 主機 DC"],["影像・藍色","超音波 HDMI → 擷取卡"],["USB・青色","擷取卡／讀卡機 → 主機"]],detail:'<b>平板換成電腦即可？</b><p>原理可以沿用。擷取卡的 USB 接電腦，並以錄影程式選取其影像來源；不是接主機 HDMI 輸出孔。</p><small>先確認既有卡的 Windows 相容性與 USB 帶寬，再接實機測錄。電源由院內核可插座供應，不從超音波訊號孔取電。</small>'}
+  };
   const hotspotRoot = document.getElementById("hotspots");
   const hotspots = [];
-  function addHotspot(text, owner, point, views) {
+  function addHotspot(text, owner, point, views, route = null) {
     const el = document.createElement("span");
     el.className = "hotspot";
     el.textContent = text;
@@ -143,7 +152,7 @@ try {
       owner,
       point: new THREE.Vector3(...point),
       projected: new THREE.Vector3(),
-      views,
+      views,route,
     });
   }
   addHotspot("左側主機盒", product.main, [0, 125, 0], ["overview"]);
@@ -172,13 +181,25 @@ try {
   addHotspot("深 14 cm",sizeView,[103,4,0],["size"]);
   addHotspot("高 6 cm",sizeView,[-100,45,65],["size"]);
   addHotspot("盒內 20.2 × 20.2 × 8.2 cm",sizeView,[0,108,-55],["size"]);
+  addHotspot("小主機",planning.internal,[-42,85,-20],["plan-internal"]);
+  addHotspot("沿用的擷取卡",planning.internal,[67,52,15],["plan-internal"]);
+  addHotspot("限位座＋束帶",planning.internal,[-78,42,90],["plan-internal"]);
+  addHotspot("盒體右側雙 J 掛鉤",planning.hook,[155,207,58],["plan-mount"]);
+  addHotspot("推車後方把手側段",planning.hook,[143,180,-125],["plan-mount"]);
+  addHotspot("止擺軟墊",planning.hook,[127,30,65],["plan-mount"]);
+  addHotspot("院內核可插座",planning.io,[-760,680,-370],["plan-io"],"power");
+  addHotspot("原廠變壓器・盒外固定",planning.io,[-185,475,-245],["plan-io"],"power");
+  addHotspot("超音波 HDMI 輸出",planning.io,[-680,950,-186],["plan-io"],"video");
+  addHotspot("HDMI → 擷取卡 → USB 主機",planning.io,[-430,740,-170],["plan-io"],"video");
+  addHotspot("外接 USB 讀卡機",planning.io,[-271.25,935,147.25],["plan-io"],"allOnly");
   function updateHotspots() {
     const enabled = document.getElementById("labels").checked;
     hotspots.forEach((h) => {
       const p = h.owner.localToWorld(h.projected.copy(h.point)).project(camera);
       const visible =
         enabled &&
-        h.views.includes(view) &&
+        h.views.includes(view === "planning" ? "plan-"+planningMode : view) &&
+        (!h.route || planningRoute === "all" || planningRoute === h.route) &&
         p.z < 1 &&
         p.z > -1 &&
         Math.abs(p.x) < 0.94 &&
@@ -210,7 +231,7 @@ try {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    const p = presets[view];
+    const p = view === "planning" ? planningPresets[planningMode] : presets[view];
     const pos = new THREE.Vector3(...p.camera),
       target = new THREE.Vector3(...p.target);
     if (product.getDoor() > 0 && !cart.visible)
@@ -231,17 +252,29 @@ try {
   }
   function setView(v) {
     view = v;
-    const p = presets[v];
+    const p = v === "planning" ? planningPresets[planningMode] : presets[v];
     cart.visible = v === "overview";
     sizeView.visible = v === "size";
-    product.root.visible = v !== "size";
+    product.root.visible = v !== "size" && v !== "planning";
+    planning.root.visible = v === "planning";planning.setMode(planningMode);planning.setRoute(planningRoute);
+    externalIO.root.visible = v === "overview";
+    document.getElementById('planning-controls').hidden = v !== 'planning';
+    document.getElementById('meeting-notes').hidden = v !== 'planning';
+    document.getElementById('planning-details').hidden = v !== 'planning';
+    document.getElementById('planning-details').innerHTML = v === 'planning' ? p.detail : '';
+    document.getElementById('route-filters').hidden = v !== 'planning' || planningMode !== 'io';
+    stage.closest('.studio').classList.toggle('planning-mode',v === 'planning');
+    document.querySelectorAll('[data-plan]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.plan===planningMode)));
+    document.querySelectorAll('[data-route]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.route===planningRoute)));
     stage.closest('.studio').classList.toggle('size-mode',v === 'size');
     document.getElementById('size-fit').hidden = v !== 'size';
-    document.getElementById('door-toggle').hidden = v === 'size';
-    document.getElementById('explode').hidden = v === 'size';
-    document.querySelector('.explode-label').hidden = v === 'size';
+    document.getElementById('door-toggle').hidden = v === 'size' || v === 'planning';
+    document.getElementById('explode').hidden = v === 'size' || v === 'planning';
+    document.querySelector('.explode-label').hidden = v === 'size' || v === 'planning';
     product.layout(cart.visible);
+    if(cart.visible)product.link.visible=false;
     setExplode(v === "inside" ? 100 : 0);
+    if(cart.visible)product.link.visible=false;
     setDoor(0);
     product.selectBoard(
       v === "inside"
@@ -258,7 +291,7 @@ try {
       .querySelector(".view-switch")
       .style.setProperty(
         "--view-index",
-        String(["overview", "box", "inside", "size"].indexOf(v)),
+        String(["overview", "box", "inside", "size", "planning"].indexOf(v)),
       );
     document.getElementById("view-caption").textContent = p.caption;
     document.getElementById("detail-index").textContent = p.caption.slice(0, 2);
@@ -277,7 +310,7 @@ try {
     );
     document.getElementById("scale-caption").textContent = cart.visible
       ? "超音波機為通用情境示意"
-      : view === "size" ? "驗證主機上限 14 × 14 × 6 cm" : "主機盒 220 × 220 × 100 mm";
+      : view === "planning" ? (planningMode === "io" ? "橙：電源・藍：HDMI・青：USB" : "固定方式為配置示意") : view === "size" ? "驗證主機上限 14 × 14 × 6 cm" : "主機盒 220 × 220 × 100 mm";
     frame();
   }
   function setState(s) {
@@ -288,6 +321,8 @@ try {
   document
     .querySelectorAll("[data-view]")
     .forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
+  document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{planningMode=b.dataset.plan;planningRoute='all';setView('planning');}));
+  document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{planningRoute=b.dataset.route;planning.setRoute(planningRoute);document.querySelectorAll('[data-route]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.route===planningRoute)));invalidateGeometry();}));
   const viewButtons = [...document.querySelectorAll("[data-view]")];
   document.querySelector(".view-switch").addEventListener("keydown", (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -342,11 +377,12 @@ try {
     clone.name = fullScene
       ? "ForHer V4 - ultrasound and recorder scene"
       : "ForHer V4 - recorder box and reader";
-    clone.add(product.root.clone(true));
+    const productsClone=product.root.clone(true);productsClone.visible=true;clone.add(productsClone);
     if (fullScene) {
       const context = cart.clone(true);
       context.visible = true;
       clone.add(context);
+      const ioClone=externalIO.root.clone(true);ioClone.visible=true;clone.add(ioClone);
     }
     clone.scale.setScalar(0.001);
     clone.updateMatrixWorld(true);
@@ -362,8 +398,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v4-1-left.glb";
-    a.download = "forher-recorder-v4-1-left.glb";
+    a.href = "./models/forher-recorder-v5-equipment.glb";
+    a.download = "forher-recorder-v5-equipment.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);
