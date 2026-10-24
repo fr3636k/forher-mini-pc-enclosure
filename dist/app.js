@@ -101,11 +101,11 @@ try {
       ],
     },
     box: {
-      camera: [470, 320, 570],
-      target: [45, 52, 0],
+      camera: [560, 340, 650],
+      target: [90, 50, 45],
       caption: "02 / 前門維修",
       title: "開門即可操作電源",
-      copy: "左鉸鏈、右把手、磁吸關門；上蓋以螺絲固定，可另行拆下維修。",
+      copy: "左鉸鏈、右把手、磁吸關門。讀卡機移到右前方，與支撐木條錯開。",
       specs: [
         ["門片", "198 × 78 × 9 mm"],
         ["門縫", "四邊各 2 mm"],
@@ -138,13 +138,13 @@ try {
   const planningPresets={
     internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；移除上蓋與前門，查看內部空間。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
     size:{...presets.size,caption:"04 / 主機尺寸",detail:''},
-    mount:{camera:[-1550,1050,-530],target:[-160,760,-280],caption:"04 / 掛鉤與支撐",title:"後掛把手，下方往前支撐",copy:"從機器左側看：把手往後突出，木盒掛在後方，下方木條往前抵住機身。",specs:[["上方","雙 J 掛鉤＋防脫螺栓"],["下方","支撐木條＋雙橡膠墊"],["木條長度","依掛好後的機身間距裁切"]],detail:'<b>為什麼要加木條？</b><p>上方兩個掛鉤掛住向後突出的把手；下方木條往機器前方伸出，末端軟墊抵住機身，限制木盒向後傾斜。</p><small>照片無法確認把手承重或外殼強度。下方須頂在確認可承壓的位置，避開風口、接頭與薄蓋板；不可靠硬木直接頂壓。尺寸仍為示意。</small>'}
+    mount:{camera:[-1650,1350,600],target:[-270,760,-215],caption:"04 / 掛鉤與支撐",title:"木盒掛在後方把手左側",copy:"以操作面板正面為準：木盒在後方把手的左側，兩個掛鉤跨住把手左側段。",specs:[["上方","雙 J 掛鉤＋防脫螺栓"],["下方","支撐木條＋雙橡膠墊"],["木條長度","依掛好後的機身間距裁切"]],detail:'<b>為什麼要加木條？</b><p>木盒位於把手左邊外側，兩個上鉤跨在把手左側段。下方短支撐木條靠住機身左側，末端加軟墊止擺。</p><small>照片無法確認把手承重或外殼強度。下方須頂在確認可承壓的位置，避開風口、接頭與薄蓋板；不可靠硬木直接頂壓。尺寸仍為示意。</small>'}
   };
-  const routeBase={camera:[-2400,1400,-650],target:[-90,670,-200],caption:"01 / 線路檢視"};
+  const routeBase={camera:[-2300,1450,1600],target:[-180,670,-120],caption:"01 / 線路檢視"};
   const routePresets={
     all:{...routeBase,title:"三條線，各自看清楚",copy:"選擇單一線路，查看起點、穿線孔與主機接頭；木盒自動透明。",specs:[["影像・藍色","HDMI → 擷取卡 → USB"],["讀卡・青色","讀卡機 → 主機 USB"],["電源・橙色","插座 → 變壓器 → DC"]],detail:'<b>三條線分開辨識</b><p>影像線包含擷取卡轉出的 USB，整段同為藍色。讀卡線為青色；電源線為橙色。</p><small>三條線由木盒後板圓孔入盒，右側孔保留備用。孔位固定，實際接頭位置依主機調整。</small>'},
-    video:{...routeBase,camera:[-1450,1050,-760],target:[-180,780,-280],title:"影像線・藍色",copy:"超音波 HDMI 輸出 → 既有擷取卡 → 小主機 USB。",specs:[["起點","超音波 HDMI OUT"],["中間","擷取卡 HDMI IN → USB"],["終點","主機 USB 影像來源"]],detail:'<b>沿用原擷取概念</b><p>HDMI 經後孔入盒，接擷取卡；擷取卡再以 USB 接主機。兩段都以藍色表示同一條影像路徑。</p><small>主機 HDMI 通常是輸出，不能直接收影像；既有擷取卡的 Windows 相容性仍須實測。</small>'},
-    reader:{...routeBase,camera:[-1550,1160,-660],target:[-150,820,-170],title:"讀卡線・青色",copy:"外接讀卡機的 USB 線，沿把手後方進盒，接主機 USB。",specs:[["起點","操作面板左側讀卡機"],["入盒","木盒後板 Ø45 mm 圓孔"],["終點","主機另一個 USB 孔"]],detail:'<b>與影像線分開</b><p>讀卡機直接接主機 USB，不經 HDMI 擷取卡。插拔卡啟停錄影，由電腦上的程式處理。</p><small>走線保留彎曲與維修餘量，不讓接頭承受懸吊重量。</small>'},
+    video:{...routeBase,camera:[-1600,1150,-1350],target:[-350,780,-230],title:"影像線・藍色",copy:"超音波 HDMI 輸出 → 既有擷取卡 → 小主機 USB。",specs:[["起點","超音波 HDMI OUT"],["中間","擷取卡 HDMI IN → USB"],["終點","主機 USB 影像來源"]],detail:'<b>沿用原擷取概念</b><p>HDMI 經後孔入盒，接擷取卡；擷取卡再以 USB 接主機。兩段都以藍色表示同一條影像路徑。</p><small>主機 HDMI 通常是輸出，不能直接收影像；既有擷取卡的 Windows 相容性仍須實測。</small>'},
+    reader:{...routeBase,camera:[-1700,1250,800],target:[-260,820,-110],title:"讀卡線・青色",copy:"外接讀卡機的 USB 線，沿把手後方進盒，接主機 USB。",specs:[["起點","操作面板左側讀卡機"],["入盒","木盒後板 Ø45 mm 圓孔"],["終點","主機另一個 USB 孔"]],detail:'<b>與影像線分開</b><p>讀卡機直接接主機 USB，不經 HDMI 擷取卡。插拔卡啟停錄影，由電腦上的程式處理。</p><small>走線保留彎曲與維修餘量，不讓接頭承受懸吊重量。</small>'},
     power:{...routeBase,camera:[-1750,1100,-1100],target:[-320,590,-320],title:"電源線・橙色",copy:"院內核可插座 → 原廠外接變壓器 → 小主機 DC 輸入。",specs:[["插座至變壓器","AC 電源線"],["變壓器位置","盒外獨立托座"],["變壓器至主機","低壓 DC 線穿後孔"]],detail:'<b>只有 DC 線進木盒</b><p>變壓器留在盒外保留散熱，低壓電源線經後孔接主機 DC 插孔。</p><small>變壓器電壓與插頭依實際主機原廠規格；插座與托座位置為示意。</small>'}
   };
   const hotspotRoot = document.getElementById("hotspots");
@@ -162,7 +162,7 @@ try {
       views,route,
     });
   }
-  addHotspot("後方主機盒", product.main, [0, 125, 0], ["overview"]);
+  addHotspot("把手左側主機盒", product.main, [0, 125, 0], ["overview"]);
   addHotspot("USB 讀卡機", product.reader, [0, 62, 0], ["overview", "box"]);
   addHotspot("超音波機（示意）", cart, [-50, 920, -90], ["overview"]);
   addHotspot("前門", product.front, [0, 72, 113], ["box"]);
@@ -191,13 +191,13 @@ try {
   addHotspot("小主機",planning.internal,[-42,85,-20],["plan-internal"]);
   addHotspot("沿用的擷取卡",planning.internal,[67,52,15],["plan-internal"]);
   addHotspot("防滑墊，直接放置",planning.internal,[-78,42,90],["plan-internal"]);
-  addHotspot("上方雙 J 掛鉤",planning.hook,[-185,857,-337],["plan-mount"]);
-  addHotspot("向後突出的把手",planning.hook,[-50,845,-337],["plan-mount"]);
-  addHotspot("下方支撐木條＋軟墊",planning.hook,[-190,700,-225],["plan-mount"]);
+  addHotspot("上方雙 J 掛鉤",planning.hook,[-335,850,-235],["plan-mount"]);
+  addHotspot("向後突出的把手",planning.hook,[-150,925,-337],["plan-mount"]);
+  addHotspot("下方支撐木條＋軟墊",planning.hook,[-285,700,-180],["plan-mount"]);
   addHotspot("院內核可插座",planning.io,[-760,680,-370],["plan-io"],"power");
   addHotspot("原廠變壓器・盒外固定",planning.io,[-185,475,-245],["plan-io"],"power");
   addHotspot("超音波 HDMI 輸出",planning.io,[-306.9,805,-186],["plan-io"],"video");
-  addHotspot("HDMI → 擷取卡 → USB 主機",planning.io,[-160,785,-480],["plan-io"],"video");
+  addHotspot("HDMI → 擷取卡 → USB 主機",planning.io,[-433,785,-260],["plan-io"],"video");
   addHotspot("外接 USB 讀卡機",planning.io,[-150,990,80],["plan-io"],"reader");
   function updateHotspots() {
     const enabled = document.getElementById("labels").checked;
@@ -228,6 +228,7 @@ try {
   function setExplode(value) {
     if (Number(value) > 0) setDoor(0);
     product.setExplode(Number(value) / 100);
+    product.link.visible=false;
     document.getElementById("explode").value = String(value);
     document.getElementById("explode-value").textContent = `${value}%`;
     invalidateGeometry();
@@ -414,8 +415,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v7-rear-hung.glb";
-    a.download = "forher-recorder-v7-rear-hung.glb";
+    a.href = "./models/forher-recorder-v8-handle-left.glb";
+    a.download = "forher-recorder-v8-handle-left.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);

@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 // All dimensions are illustrative millimetres until the actual handle and shell are measured.
 export const installation = {
-  box: [-160, 650, -480], reader: [-150, 929, 80], rotationY: -Math.PI/2,
-  handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], spacerDepthMm: 157,
+  box: [-433, 650, -260], reader: [-150, 929, 80], rotationY: 0,
+  handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], spacerDepthMm: 32,
 };
 const materials = {
   metal: new THREE.MeshStandardMaterial({color:'#a2aaa5',metalness:.65,roughness:.35}),
@@ -39,9 +39,9 @@ export function buildFixings() {
   }
   const spacer=group('Lower wooden standoff with two rubber contact pads');
   mounting.add(spacer);
-  box(spacer,'Wood spacer - depth cut to measured gap',[157,24,120],[188.5,23,25],materials.wood);
-  for(const z of [-20,70]) {
-    box(spacer,'Rubber contact pad - verified shell contact only',[4,24,24],[269,23,z],materials.rubber);
+  box(spacer,'Wood spacer - depth cut to measured gap',[32,24,40],[126,23,80],materials.wood);
+  for(const z of [70,90]) {
+    box(spacer,'Rubber contact pad - verified shell contact only',[4,24,12],[144,23,z],materials.rubber);
     screw(spacer,109,23,z);
   }
   const restraints=group('Loose equipment on non-slip base pads');
@@ -50,9 +50,10 @@ export function buildFixings() {
   return {mounting,restraints};
 }
 
-// Local +X of the enclosure faces the machine front (+world Z) when rear-hung.
+// The enclosure hangs outboard of the rear handle left leg; local +X faces the machine.
 export function mountedPoint([x,y,z]) {
-  const b=installation.box;return [b[0]-z,b[1]+y,b[2]+x];
+  const b=installation.box,c=Math.cos(installation.rotationY),s=Math.sin(installation.rotationY);
+  return [b[0]+c*x+s*z,b[1]+y,b[2]-s*x+c*z];
 }
 export function buildRearHandle() {
   const g=group('Rearward protruding handle - no platform above');
@@ -72,14 +73,14 @@ export function buildExternalIO() {
   box(power,'External adapter cradle',[105,4,55],[-185,410,-245]);
   for(const x of [-235,-135]) box(power,'Adapter cradle side lip',[4,16,55],[x,420,-245]);
   tube(power,'AC - outlet to original adapter',[[-760,590,-401],[-680,480,-400],[-410,400,-370],[-230,430,-245]],3.1,'#cc8b32');
-  // Enclosure rear panel is rotated: its hole is now on world X=-50.
-  tube(power,'DC - adapter through enclosure hole to PC DC input',[[-140,430,-245],[-20,560,-340],[-10,650,-520],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
-  box(power,'PC DC socket indicative',[4,8,9],mountedPoint([-15,43,-40]),materials.rubber);
+  // Rear-panel hole centre is installation.box + [45,50,-110].
+  tube(power,'DC - adapter through enclosure hole to PC DC input',[[-140,430,-245],[-140,560,-430],[-330,650,-450],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
+  box(power,'PC DC socket indicative',[9,8,4],mountedPoint([-15,43,-40]),materials.rubber);
   const video=group('Video route - HDMI capture and its USB output'); root.add(video);
-  tube(video,'HDMI - ultrasound to existing capture input',[[-306.9,759.5,-186],[-350,800,-350],[-170,795,-610],[-10,770,-610],[-10,720,-445],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
+  tube(video,'HDMI - ultrasound to existing capture input',[[-306.9,759.5,-186],[-350,790,-390],[-360,770,-430],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
   tube(video,'Video USB - capture to PC',[[67,25,62],[90,24,80],[90,24,-75],[-65,30,-75],[-64,43,87]].map(mountedPoint),2,'#3e7ed4');
   const reader=group('Card reader USB route'); root.add(reader);
-  tube(reader,'Reader USB - through enclosure hole to PC',[[-110,942,32],[-300,925,-130],[-320,850,-430],[-10,740,-510],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
+  tube(reader,'Reader USB - through enclosure hole to PC',[[-110,942,32],[-300,925,-130],[-425,850,-420],[-400,740,-405],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
   root.userData={units:'mm',adapterDimensionsAssumed:true,outletPositionAssumed:true,sharedMedicalPowerNotValidated:true};
   function setRoute(route) {
     power.visible=route==='all'||route==='power';
@@ -89,11 +90,11 @@ export function buildExternalIO() {
   return {root,power,video,reader,setRoute};
 }
 
-function fadeCase(main) {
+function fadeCase(main,opacity=.12) {
   for(const prefix of ['A Top','B Bottom','C Left','D Right','E Rear','Front door hinge']) {
     main.children.find(n=>n.name.startsWith(prefix))?.traverse(o=>{
       if(o.isMesh&&o.material?.isMeshStandardMaterial) {
-        o.material=o.material.clone(); o.material.transparent=true; o.material.opacity=.12;
+        o.material=o.material.clone(); o.material.transparent=true; o.material.opacity=opacity;
         o.material.depthWrite=false; o.castShadow=false;
       }
     });
@@ -105,10 +106,10 @@ export function buildPlanningView(product,cart) {
   const cutaway=product.main.clone(true); cutaway.position.set(0,0,0); fadeCase(cutaway);
   for(const prefix of ['A Top','Front door hinge','Right-side twin J']) cutaway.children.find(n=>n.name.startsWith(prefix)).visible=false;
   internal.add(cutaway);
-  const hook=group('Left profile of rear-hung enclosure and forward support'); root.add(hook);
+  const hook=group('Enclosure on the left side of the rear handle'); root.add(hook);
   const profileCart=cart.clone(true);profileCart.visible=true;
   profileCart.traverse(o=>{if(o.name==='Probe cable')o.visible=false;});hook.add(profileCart);
-  const hookedCase=product.main.clone(true);hookedCase.position.set(...installation.box);hookedCase.rotation.y=installation.rotationY;hook.add(hookedCase);
+  const hookedCase=product.main.clone(true);hookedCase.position.set(...installation.box);hookedCase.rotation.y=installation.rotationY;fadeCase(hookedCase,.45);hook.add(hookedCase);
   const io=group('Transparent enclosure with full route context'); root.add(io);
   const context=cart.clone(true); context.visible=true; context.traverse(o=>{if(o.name==='Probe cable')o.visible=false;}); io.add(context);
   const wiredCase=product.main.clone(true); wiredCase.position.set(...installation.box); wiredCase.rotation.y=installation.rotationY; fadeCase(wiredCase); io.add(wiredCase);

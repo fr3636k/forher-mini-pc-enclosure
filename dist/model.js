@@ -6,7 +6,7 @@ import { buildFixings, buildRearHandle, installation } from "./equipment-view.js
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "7.0 rear-hung enclosure with forward brace",
+  version: "8.0 enclosure outboard of rear handle left leg",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -547,9 +547,9 @@ export function buildProducts() {
     );
     main.rotation.y=withCart?installation.rotationY:0;
     reader.position.set(
-      withCart ? installation.reader[0] : 210,
+      withCart ? installation.reader[0] : 240,
       withCart ? installation.reader[1] : 0,
-      withCart ? installation.reader[2] : 70,
+      withCart ? installation.reader[2] : 165,
     );
     drawLink();
   }
