@@ -5,3 +5,5 @@ qa/
 output/
 tmp/
 .DS_Store
+
+tmp/pdfs/

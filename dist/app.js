@@ -113,15 +113,15 @@ try {
       ],
     },
     inside: {
-      camera: [650, 480, 800],
-      target: [0, 70, 0],
-      caption: "03 / 六片木板爆炸圖",
-      title: "六片矩形板，直切組裝",
-      copy: "選取下方板件，可查看形狀與開孔位置。所有大圓孔均為 Ø45 mm，以同一支孔鋸加工。",
+      camera: [1000, 680, 1120],
+      target: [85, 85, 0],
+      caption: "03 / 箱體與固定件爆炸圖",
+      title: "六片板件與三組固定件",
+      copy: "板件 A-F；固定件 G-I。尺寸與數量依同一比例呈現，金屬鉤與木條為參考估算。",
       specs: [
-        ["板件", "上、下、左、右、後、前門"],
-        ["組合", "平接＋內側木條固定"],
-        ["拆解", "滑桿控制分離程度"],
+        ["箱體 A-F", "6 片，板厚 9 mm"],
+        ["固定件 G-I", "J 鉤 2、木條 1、軟墊 2"],
+        ["尺寸狀態", "估算示意，待實機確認"],
       ],
     },
     size: {
@@ -138,7 +138,7 @@ try {
   const planningPresets={
     internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；移除上蓋與前門，查看內部空間。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
     size:{...presets.size,caption:"04 / 主機尺寸",detail:''},
-    mount:{camera:[-1650,1350,600],target:[-270,760,-215],caption:"04 / 掛鉤與支撐",title:"木盒掛在後方把手左側",copy:"以操作面板正面為準：木盒在後方把手的左側，兩個掛鉤跨住把手左側段。",specs:[["上方","雙 J 掛鉤＋防脫螺栓"],["下方","支撐木條＋雙橡膠墊"],["木條長度","依掛好後的機身間距裁切"]],detail:'<b>為什麼要加木條？</b><p>木盒位於把手左邊外側，兩個上鉤跨在把手左側段。下方短支撐木條靠住機身左側，末端加軟墊止擺。</p><small>照片無法確認把手承重或外殼強度。下方須頂在確認可承壓的位置，避開風口、接頭與薄蓋板；不可靠硬木直接頂壓。尺寸仍為示意。</small>'}
+    mount:{camera:[-1650,1350,600],target:[-270,760,-215],caption:"04 / 掛鉤與支撐",title:"木盒掛在後方把手左側",copy:"以操作面板正面為準：木盒在後方把手的左側，兩個掛鉤跨住把手左側段。",specs:[["上方","雙 J 掛鉤＋防脫螺栓"],["下方","支撐木條＋雙橡膠墊"],["木條長度","依掛好後的機身間距裁切"]],detail:'<b>為什麼要加木條？</b><p>木盒位於把手左邊外側，兩個上鉤跨在把手左側段。下方短木條靠住機身左側，末端加軟墊止擺。木條暫估跨距60、高30、伸出32 mm；寬高與伸出量均待實機確認。</p><small>照片無法確認把手承重或外殼強度。下方須頂在確認可承壓的位置，避開風口、接頭與薄蓋板；不可靠硬木直接頂壓。尺寸仍為示意。</small>'}
   };
   const routeBase={camera:[-2300,1450,1600],target:[-180,670,-120],caption:"01 / 線路檢視"};
   const routePresets={
@@ -184,6 +184,9 @@ try {
       point,
       ["inside"],
     );
+  addHotspot('G 雙 J 鉤 ×2 · 高149／出53／寬28（估）',product.boards.G,[145,215,25],['inside']);
+  addHotspot('H 木條 · 跨60／高30／出32（估）',product.boards.H,[135,45,80],['inside']);
+  addHotspot('I 軟墊 ×2 · 厚4／高30／寬18（估）',product.boards.I,[160,35,100],['inside']);
   addHotspot("寬 14 cm",sizeView,[0,4,101],["plan-size"]);
   addHotspot("深 14 cm",sizeView,[103,4,0],["plan-size"]);
   addHotspot("高 6 cm",sizeView,[-100,45,65],["plan-size"]);
@@ -194,11 +197,11 @@ try {
   addHotspot("上方雙 J 掛鉤",planning.hook,[-335,850,-235],["plan-mount"]);
   addHotspot("向後突出的把手",planning.hook,[-150,925,-337],["plan-mount"]);
   addHotspot("下方支撐木條＋軟墊",planning.hook,[-285,700,-180],["plan-mount"]);
-  addHotspot("院內核可插座",planning.io,[-760,680,-370],["plan-io"],"power");
+  addHotspot("院內核可插座",planning.io,[-760,230,-370],["plan-io"],"power");
   addHotspot("原廠變壓器・盒外固定",planning.io,[-185,475,-245],["plan-io"],"power");
   addHotspot("超音波 HDMI 輸出",planning.io,[-306.9,805,-186],["plan-io"],"video");
   addHotspot("HDMI → 擷取卡 → USB 主機",planning.io,[-433,785,-260],["plan-io"],"video");
-  addHotspot("外接 USB 讀卡機",planning.io,[-150,990,80],["plan-io"],"reader");
+  addHotspot("外接 USB 讀卡機",planning.io,[-410,990,185],["plan-io"],"reader");
   function updateHotspots() {
     const enabled = document.getElementById("labels").checked;
     hotspots.forEach((h) => {
@@ -415,8 +418,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v8-handle-left.glb";
-    a.download = "forher-recorder-v8-handle-left.glb";
+    a.href = "./models/forher-recorder-v9-photo-cart.glb";
+    a.download = "forher-recorder-v9-photo-cart.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);

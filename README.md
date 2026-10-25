@@ -1,6 +1,6 @@
 # 豐禾｜超音波錄影盒 3D 設計提案
 
-目前版本：**V8.0**
+目前版本：**V9.0**
 
 公開展示：[https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site](https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site)
 
@@ -237,10 +237,10 @@ Blender 中的修改不會自動回寫 `model.js`。目前網頁是以 JavaScrip
 
 GitHub 公開儲存庫與後續提交方式：[GitHub 使用說明](GitHub使用說明.md)。代理提交須遵守 [AGENTS.md](AGENTS.md)。
 
-## V8 後方把手左側承掛
+## V9 照片機型與固定件設計圖
 
-以操作面板正面為準，木盒掛在後方把手左邊外側，兩個掛鉤跨住把手左側段。箱體不放在把手後面。下方短木條與軟墊靠住機身左側，接觸位置及長度依實機確認。
+cart-view.js 依照片重畫灰藍色操作台、中央觸控面板、鍵盤、圓弧前把手、雙側探頭座、螢幕支臂與較圓潤的機身。操作台後側較高、前側較低。後把手與左側木盒掛位不變；插座移至接近地板的低處。影像畫面為程序化示意，未公開病患影像。
 
-前門維修視角中，讀卡機移到右前方，與縮短的支撐木條錯開；鏡頭同時重新取景。維修視角隱藏舊灰色占位線，避免開門後出現接頭位置已失效的線材。
+爆炸圖包含 A-F 六片箱體、G 雙 J 鉤、H 支撐木條、I 軟墊，卡片可選取與標示，滑桿可拆解全部組件。每鉤暫估高149、伸出53、寬28；木條跨距60、高30、伸出32；軟墊厚4、高30、寬18。單位 mm，全部固定件尺寸為估算，待實機確認。
 
-四段線路滑塊、主機尺寸與板件功能保留。最新下載模型為 dist/models/forher-recorder-v8-handle-left.glb。原箱體 PDF 尺寸不變，支撐木條需現場量測。詳見 [設備與接線說明](設備與接線說明.md)。
+可下載 PDF 更新為兩頁：箱體板件、固定件與安裝俯視示意。最新模型為 dist/models/forher-recorder-v9-photo-cart.glb。PDF 製圖程式見 scripts/build-design-pdf.py；修改參考尺寸時需同步 equipment-view.js 的 hardwareSpecs 與模型幾何。

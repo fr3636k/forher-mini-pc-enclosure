@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
 // All dimensions are illustrative millimetres until the actual handle and shell are measured.
+export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{span:60,height:30,projection:32,quantity:1},pad:{width:18,height:30,thickness:4,quantity:2},allDimensionsEstimated:true};
 export const installation = {
-  box: [-433, 650, -260], reader: [-150, 929, 80], rotationY: 0,
+  box: [-433, 650, -260], reader: [-410, 930, 185], rotationY: 0,
   handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], spacerDepthMm: 32,
 };
 const materials = {
@@ -28,26 +29,28 @@ function screw(parent,x,y,z) {
 
 export function buildFixings() {
   const mounting=group('Right-side twin J hooks - provisional rear-handle mounting');
+  const hooks=group('G upper twin J hooks - estimated sizes');mounting.add(hooks);
   for(const z of [-20,70]) {
-    box(mounting,'External load-spreading hook plate',[4,130,28],[114,115,z]);
-    box(mounting,'J-hook top bridge',[49,5,28],[138.5,183,z]);
-    box(mounting,'J-hook retaining lip',[4,32,28],[161,169,z]);
-    box(mounting,'Hook rubber liner',[33,3,24],[140,179,z],materials.rubber);
-    box(mounting,'Internal backing washer plate',[2,44,32],[100,67,z]);
-    for(const y of [52,82]) screw(mounting,118,y,z);
-    box(mounting,'Removable anti-lift screw stop - provisional',[43,4,5],[138.5,147,z]);
+    const hook=group('J hook assembly');hooks.add(hook);
+    box(hook,'External load-spreading hook plate',[4,146,28],[114,110,z]);
+    box(hook,'J-hook top bridge',[49,5,28],[138.5,183,z]);
+    box(hook,'J-hook retaining lip',[4,32,28],[161,169,z]);
+    box(hook,'Hook rubber liner',[33,3,24],[140,179,z],materials.rubber);
+    box(hook,'Internal backing washer plate',[2,44,32],[100,67,z]);
+    for(const y of [52,82]) screw(hook,118,y,z);
+    box(hook,'Removable anti-lift screw stop - provisional',[43,4,5],[138.5,147,z]);
   }
-  const spacer=group('Lower wooden standoff with two rubber contact pads');
-  mounting.add(spacer);
-  box(spacer,'Wood spacer - depth cut to measured gap',[32,24,40],[126,23,80],materials.wood);
-  for(const z of [70,90]) {
-    box(spacer,'Rubber contact pad - verified shell contact only',[4,24,12],[144,23,z],materials.rubber);
-    screw(spacer,109,23,z);
+  const wood=group('H lower support wood - estimated cross section');mounting.add(wood);
+  box(wood,'Wood spacer - depth cut to measured gap',[32,30,60],[126,25,80],materials.wood);
+  const pads=group('I rubber contact pads - 2 pieces');mounting.add(pads);
+  for(const z of [72,92]) {
+    box(pads,'Rubber contact pad - verified shell contact only',[4,30,18],[144,25,z],materials.rubber);
+    screw(wood,109,25,z);
   }
   const restraints=group('Loose equipment on non-slip base pads');
   box(restraints,'PC non-slip base pad',[132,7,132],[-29,12.5,24],materials.rubber);
   box(restraints,'Capture non-slip base pad',[49,6,94],[67,12,15],materials.rubber);
-  return {mounting,restraints};
+  return {mounting,restraints,parts:{G:hooks,H:wood,I:pads}};
 }
 
 // The enclosure hangs outboard of the rear handle left leg; local +X faces the machine.
@@ -65,14 +68,14 @@ export function buildRearHandle() {
 export function buildExternalIO() {
   const root=group('External power adapter and three separate signal routes');
   const power=group('Power route - AC to external adapter to PC DC input'); root.add(power);
-  box(power,'Clinic-approved outlet placeholder',[65,100,16],[-760,600,-370],new THREE.MeshStandardMaterial({color:'#f8f6fa',roughness:.8}));
-  for(const x of [-770,-750]) box(power,'Outlet pin opening',[4,12,2],[x,620,-379],materials.rubber);
-  box(power,'Plug body',[28,25,20],[-760,600,-391],materials.adapter);
+  box(power,'Clinic-approved outlet placeholder',[65,100,16],[-760,150,-370],new THREE.MeshStandardMaterial({color:'#f8f6fa',roughness:.8}));
+  for(const x of [-770,-750]) box(power,'Outlet pin opening',[4,12,2],[x,170,-379],materials.rubber);
+  box(power,'Plug body',[28,25,20],[-760,150,-391],materials.adapter);
   box(power,'Original external adapter - envelope assumed',[90,35,45],[-185,430,-245],materials.adapter);
   box(power,'Adapter cradle chassis fixing plate - provisional',[105,48,4],[-185,430,-213]);
   box(power,'External adapter cradle',[105,4,55],[-185,410,-245]);
   for(const x of [-235,-135]) box(power,'Adapter cradle side lip',[4,16,55],[x,420,-245]);
-  tube(power,'AC - outlet to original adapter',[[-760,590,-401],[-680,480,-400],[-410,400,-370],[-230,430,-245]],3.1,'#cc8b32');
+  tube(power,'AC - outlet to original adapter',[[-760,140,-401],[-680,85,-400],[-410,95,-370],[-270,290,-310],[-230,430,-245]],3.1,'#cc8b32');
   // Rear-panel hole centre is installation.box + [45,50,-110].
   tube(power,'DC - adapter through enclosure hole to PC DC input',[[-140,430,-245],[-140,560,-430],[-330,650,-450],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
   box(power,'PC DC socket indicative',[9,8,4],mountedPoint([-15,43,-40]),materials.rubber);
@@ -80,7 +83,7 @@ export function buildExternalIO() {
   tube(video,'HDMI - ultrasound to existing capture input',[[-306.9,759.5,-186],[-350,790,-390],[-360,770,-430],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
   tube(video,'Video USB - capture to PC',[[67,25,62],[90,24,80],[90,24,-75],[-65,30,-75],[-64,43,87]].map(mountedPoint),2,'#3e7ed4');
   const reader=group('Card reader USB route'); root.add(reader);
-  tube(reader,'Reader USB - through enclosure hole to PC',[[-110,942,32],[-300,925,-130],[-425,850,-420],[-400,740,-405],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
+  tube(reader,'Reader USB - through enclosure hole to PC',[[-370,943,137],[-440,925,-50],[-450,850,-420],[-400,740,-405],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
   root.userData={units:'mm',adapterDimensionsAssumed:true,outletPositionAssumed:true,sharedMedicalPowerNotValidated:true};
   function setRoute(route) {
     power.visible=route==='all'||route==='power';

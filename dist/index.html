@@ -7,7 +7,7 @@
     <title>豐禾小型主機木盒</title>
     <meta
       name="description"
-      content="超音波錄影盒配置、前門操作與六片木板爆炸圖。"
+      content="超音波錄影盒配置、前門操作與六片組件爆炸圖。"
     />
     <link rel="icon" type="image/png" href="./assets/forher-tree.png" />
     <link rel="stylesheet" href="./style.css" />
@@ -44,7 +44,7 @@
               <button data-view="overview" aria-pressed="true">線路配置</button
               ><button data-view="box" aria-pressed="false">前門維修</button
               ><button data-view="inside" aria-pressed="false">
-                木板爆炸圖</button
+                組件爆炸圖</button
               ><button data-view="planning" aria-pressed="false">主機與設備</button>
             </div>
           </nav>
@@ -112,8 +112,8 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">木作板件 / 單位 mm</p>
-            <h2>六片木板設計</h2>
-            <p>點選板件，查看對應的 3D 位置。每片 1 件，板厚皆為 9 mm。</p>
+            <h2>箱體與固定件設計</h2>
+            <p>點選板件，查看對應的 3D 位置。A-F 各 1 片、板厚 9 mm；G-I 為固定件，依圖示數量。</p>
           </div>
           <a
             class="drawing-download"
@@ -399,9 +399,10 @@
               </text></svg
             ><span class="board-purpose">開門操作電源，方便日常維護。</span>
           </button>
+<button class="board-card" data-board="G" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280" role="img" aria-label="G 雙 J 鉤 · 2 件"><g font-family="sans-serif" font-size="10.5" fill="#675b70"><text x="25" y="22" font-size="12" fill="#7a2cb0">G / 雙 J 鉤 · 2 件</text><path d="M100 192 V43 H153 V76 H149 V48 H104 V192 Z" fill="#a7afb5" stroke="#63707a"/><rect x="205" y="43" width="28" height="149" fill="#a7afb5" stroke="#63707a"/><path d="M91 43 V192 M100 205 H153" stroke="#7a2cb0"/><text x="81" y="120" transform="rotate(-90 81 120)" text-anchor="middle">149 高（估）</text><text x="126" y="220" text-anchor="middle">53 伸出（估）</text><text x="219" y="210" text-anchor="middle">28 寬</text><text x="126" y="250" text-anchor="middle">鋼片 4／頂橋 5・內開口 43（估）</text></g></svg><span class="board-purpose">上方承掛，尺寸與開口依把手確認。</span></button><button class="board-card" data-board="H" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280" role="img" aria-label="H 支撐木條 · 1 件"><g font-family="sans-serif" font-size="10.5" fill="#675b70"><text x="25" y="22" font-size="12" fill="#7a2cb0">H / 支撐木條 · 1 件</text><rect x="90" y="105" width="60" height="30" fill="#d9b789" stroke="#795f41"/><rect x="205" y="105" width="32" height="30" fill="#d9b789" stroke="#795f41"/><path d="M90 148 H150 M78 105 V135 M205 148 H237" stroke="#7a2cb0"/><text x="120" y="166" text-anchor="middle">60 跨距（估）</text><text x="68" y="120" transform="rotate(-90 68 120)" text-anchor="middle">30 高</text><text x="221" y="166" text-anchor="middle">32 伸出</text><text x="150" y="215" text-anchor="middle">伸出量 = 現場間距 − 軟墊厚度</text><text x="150" y="242" text-anchor="middle">寬、高與伸出量均待確認</text></g></svg><span class="board-purpose">下方止擺，長度依現場間距裁切。</span></button><button class="board-card" data-board="I" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280" role="img" aria-label="I 接觸軟墊 · 2 件"><g font-family="sans-serif" font-size="10.5" fill="#675b70"><text x="25" y="22" font-size="12" fill="#7a2cb0">I / 接觸軟墊 · 2 件</text><rect x="105" y="105" width="18" height="30" fill="#30353e"/><rect x="145" y="105" width="18" height="30" fill="#30353e"/><rect x="220" y="105" width="4" height="30" fill="#30353e"/><text x="114" y="158" text-anchor="middle">18 寬</text><text x="222" y="158" text-anchor="middle">4 厚</text><text x="91" y="120" transform="rotate(-90 91 120)" text-anchor="middle">30 高</text><text x="150" y="215" text-anchor="middle">4 × 30 × 18 mm／件（估）</text><text x="150" y="242" text-anchor="middle">末端接觸機身，避免硬木直接頂壓</text></g></svg><span class="board-purpose">兩點接觸，減少晃動並保護機身。</span></button>
         </div>
         <p class="board-hint" id="board-hint" aria-live="polite">
-          圓孔統一 Ø45 mm。另加下方支撐木條，長度依現場間距裁切；掛鉤與木條示意見「主機與設備」。
+          圓孔統一 Ø45 mm。固定件依同一比例繪製；J 鉤與木條尺寸為估算，掛鉤開口及支撐伸出量須量測實機。
         </p>
       </section>
     </main>

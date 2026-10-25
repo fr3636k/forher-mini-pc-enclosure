@@ -8,7 +8,7 @@ document.querySelectorAll("[data-board]").forEach((b) =>
     window.recorderDesign.product.selectBoard(id);
     window.recorderDesign.setExplode(100);
     document.getElementById("board-hint").textContent =
-      `已選取 ${id} 板件，3D 中以紫色標示。`;
+      `已選取 ${id} ${["G","H","I"].includes(id)?"固定件（尺寸為估算）":"板件"}，3D 中以紫色標示。`;
     document
       .getElementById("stage")
       .scrollIntoView({

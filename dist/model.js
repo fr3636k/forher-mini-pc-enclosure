@@ -1,12 +1,14 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "./vendor/RoundedBoxGeometry.js";
-import { buildFixings, buildRearHandle, installation } from "./equipment-view.js";
+import { buildFixings, installation } from "./equipment-view.js";
+
+import { buildUltrasoundCart } from "./cart-view.js";
 
 // Geometry uses millimetres. The GLB exporter converts the product root to metres.
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "8.0 enclosure outboard of rear handle left leg",
+  version: "9.0 photo-reference cart and exploded hardware",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -366,7 +368,7 @@ export function buildProducts() {
     steel,
     0.7,
   );
-  const {mounting,restraints}=buildFixings();main.add(mounting);equipment.add(restraints);
+  const {mounting,restraints,parts:fixtureParts}=buildFixings();main.add(mounting);equipment.add(restraints);
 
   const reader = group(products, "Removable health card reader and cradle");
   block(reader, "Reader cradle", 116, 5, 88, 0, 2.5, -9, graphite, 3);
@@ -508,12 +510,15 @@ export function buildProducts() {
     right.position.x = v * 135;
     rear.position.z = -v * 135;
     doorPivot.position.z = 111 + v * 160;
-    mounting.visible = v === 0;
+    mounting.visible = true;
+    fixtureParts.G.position.set(v*170,v*90,0);
+    fixtureParts.H.position.set(v*170,-v*65,0);
+    fixtureParts.I.position.set(v*240,-v*65,v*15);
     equipment.visible = v === 0;
     reader.visible = v === 0;
     link.visible = v === 0;
   }
-  const boards = { A: lid, B: bottom, C: left, D: right, E: rear, F: front };
+  const boards = { A: lid, B: bottom, C: left, D: right, E: rear, F: front, ...fixtureParts };
   function selectBoard(id) {
     Object.entries(boards).forEach(([key, g]) =>
       g.traverse((o) => {
@@ -577,129 +582,4 @@ export function buildProducts() {
   };
 }
 
-export function buildCart() {
-  const cart = group(
-    null,
-    "Ultrasound cart context only - not supplied equipment",
-  );
-  const light = mat("#dce0d8", 0.6),
-    dark = mat("#586660", 0.6);
-  block(cart, "Console support on machine body", 140, 68, 120, -35, 543, -5, light, 8);
-  block(cart, "Cart equipment body", 270, 340, 220, -50, 352, -25, light, 12);
-  block(cart, "Front equipment recess", 220, 255, 5, -50, 355, 87, dark, 8);
-  block(cart, "Lower cart base", 360, 35, 300, -50, 111, 0, light, 12);
-  for (const x of [-185, 85])
-    for (const z of [-110, 110]) {
-      block(cart, "Wheel fork", 15, 38, 20, x, 67, z, steel, 2);
-      const wh = new THREE.Mesh(
-        new THREE.CylinderGeometry(30, 30, 18, 24),
-        rubber,
-      );
-      wh.rotation.z = Math.PI / 2;
-      wh.position.set(x, 37, z);
-      wh.castShadow = true;
-      cart.add(wh);
-    }
-  block(cart, "Monitor articulated support vertical", 22, 125, 22, -105, 640, -80, dark, 3);
-  block(cart, "Monitor articulated support arm", 100, 18, 22, -75, 700, -80, dark, 3);
-  const monitor = group(cart, "Existing ultrasound monitor context");
-  monitor.position.set(-50, 776, -90);
-  monitor.rotation.x = -0.06;
-  block(monitor, "Existing screen housing", 350, 230, 20, 0, 0, 0, black, 8);
-  planeText(
-    monitor,
-    "Ultrasound screen schematic",
-    323,
-    200,
-    0,
-    4,
-    11,
-    (ctx, w, h) => {
-      ctx.fillStyle = "#182223";
-      ctx.fillRect(0, 0, w, h);
-      ctx.strokeStyle = "#72817b";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(w * 0.5, h * 0.18);
-      ctx.lineTo(w * 0.12, h * 0.84);
-      ctx.quadraticCurveTo(w * 0.5, h * 1.03, w * 0.88, h * 0.84);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fillStyle = "#495952";
-      ctx.fill();
-      ctx.fillStyle = "#7e8c83";
-      ctx.font = "26px sans-serif";
-      ctx.fillText("ULTRASOUND / 示意", 30, 42);
-    },
-  );
-  // Generic ultrasound console, keyboard, trackball and probe holder.
-  const console = group(cart, "Ultrasound control console");
-  console.position.set(-15, 579, -12);
-  console.rotation.x = -0.18;
-  block(console, "Control panel housing", 240, 16, 190, 0, 0, 0, light, 7);
-  block(console, "Keyboard inset", 148, 2, 68, -26, 9, -14, dark, 3);
-  for (let row = 0; row < 4; row++)
-    for (let col = 0; col < 12; col++)
-      block(
-        console,
-        "Keyboard key",
-        9,
-        2,
-        10,
-        -91 + col * 11,
-        11,
-        -39 + row * 14,
-        white,
-        1,
-      );
-  block(console, "Keyboard spacebar", 60, 2, 9, -25, 11, 16, white, 1);
-  const ball = new THREE.Mesh(new THREE.SphereGeometry(13, 24, 16), dark);
-  ball.position.set(77, 14, 35);
-  console.add(ball);
-  for (const x of [45, 77, 105])
-    for (const z of [-52, -17]) {
-      const k = new THREE.Mesh(new THREE.CylinderGeometry(7, 7, 9, 20), steel);
-      k.position.set(x, 14, z);
-      console.add(k);
-    }
-  for (let i = 0; i < 6; i++)
-    block(console, "Function button", 13, 3, 10, -88 + i * 25, 11, 61, dark, 2);
-  const probeGroup = group(cart, "Ultrasound probes and holder");
-  block(probeGroup, "Probe holder", 35, 15, 125, -260, 526, -8, light, 4);
-  for (const z of [-43, 32]) {
-    block(probeGroup, "Probe handle", 18, 70, 21, -260, 565, z, white, 7);
-    block(probeGroup, "Probe head", 33, 26, 18, -260, 611, z, dark, 6);
-    cable(
-      probeGroup,
-      "Probe cable",
-      [
-        [-260, 526, z],
-        [-295, 365, z + 20],
-        [-270, 288, z + 5],
-        [-210, 365, z],
-      ],
-      2.4,
-    );
-  }
-  const hdmiPort = block(
-    cart,
-    "Ultrasound HDMI output placeholder",
-    4,
-    12,
-    22,
-    -198,
-    490,
-    -120,
-    black,
-    0.7,
-  );
-  label(cart, "ULTRASOUND", 170, 15, -50, 434, 91, "#c1cbc0");
-  const rearHandle=buildRearHandle();rearHandle.scale.setScalar(1/1.55);cart.add(rearHandle);
-  cart.scale.setScalar(1.55);
-  cart.userData = {
-    platformWidthMm: 589,
-    overallHeightMm: 1382,
-    dimensionsAssumed: true,
-  };
-  return cart;
-}
+export function buildCart() { return buildUltrasoundCart(); }
