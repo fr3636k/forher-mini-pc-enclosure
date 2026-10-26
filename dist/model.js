@@ -8,7 +8,7 @@ import { buildUltrasoundCart } from "./cart-view.js";
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "11.0 forward support across rear handle void",
+  version: "12.0 total 150 mm support arm with 30 mm section",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -179,10 +179,10 @@ function feet(parent, w, d) {
 }
 
 export function buildProducts() {
-  const products = group(null, "ForHer ultrasound recorder concept V11");
+  const products = group(null, "ForHer ultrasound recorder concept V12");
   products.userData = {
     units: "millimetres before export",
-    design: "V11 left hinged top lid with fixed front access hole",
+    design: "V12 left hinged top lid with fixed front access hole",
     manufacturingReady: false,
     mainEnvelopeMm: "220 x 220 x 100",
     computerEnvelopeMm: "124 x 124 x 53.7",

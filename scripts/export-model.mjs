@@ -28,20 +28,34 @@ const shellBox=new THREE.Box3().setFromObject(shell),caseFront=-260+110;
 if(shellBox.min.z<=caseFront)throw Error('Shell falsely extends under hanging box');
 const oldTouch=new THREE.Raycaster(new THREE.Vector3(-330,675,-180),new THREE.Vector3(1,0,0));
 if(oldTouch.intersectObject(shell,false).length)throw Error('Old short spacer still appears to touch body');
-let pads=0;product.boards.I.traverse(o=>{if(!o.isMesh)return;const b=new THREE.Box3().setFromObject(o),c=b.getCenter(new THREE.Vector3());
+let padCorners=0;let pads=0;product.boards.I.traverse(o=>{if(!o.isMesh)return;const b=new THREE.Box3().setFromObject(o),c=b.getCenter(new THREE.Vector3());
  const hit=new THREE.Raycaster(new THREE.Vector3(b.min.x-1,c.y,c.z),new THREE.Vector3(1,0,0)).intersectObject(shell,false)[0];
- if(!hit||Math.abs(hit.point.x-b.max.x)>.05||b.min.z<shellBox.min.z+12)throw Error('Forward pad misses flat shell');pads++;});
+ if(!hit||Math.abs(hit.point.x-b.max.x)>.05||b.min.z<shellBox.min.z+12)throw Error('Forward pad misses flat shell');
+ for(const y of [b.min.y+.1,b.max.y-.1])for(const z of [b.min.z+.1,b.max.z-.1]){const corner=new THREE.Raycaster(new THREE.Vector3(b.min.x-1,y,z),new THREE.Vector3(1,0,0)).intersectObject(shell,false)[0];if(!corner||Math.abs(corner.point.x-b.max.x)>.05)throw Error('Pad corner is unsupported');padCorners++;}pads++;});
 if(pads!==2)throw Error('Need two forward pads');
 const arm=product.boards.H.children.find(o=>o.name.startsWith('Forward support arm'));const armBox=new THREE.Box3().setFromObject(arm);
-if(Math.abs(armBox.max.z-caseFront-150)>.01)throw Error('Forward overhang incorrect');
-console.log(JSON.stringify({oldSpacerNowInVoid:true,newPadsTouchFlatShell:true,padCount:pads,forwardOverhangMm:150}));
+if(Math.abs(armBox.max.z-caseFront-100)>.01)throw Error('Forward overhang incorrect');
+const armSize=armBox.getSize(new THREE.Vector3());if(Math.abs(armSize.z-150)>.01||Math.abs(armSize.x-30)>.01||Math.abs(armSize.y-30)>.01)throw Error('Support exceeds 150 x 30 x 30');
+if(Math.abs(caseFront-armBox.min.z-50)>.01)throw Error('Fixed overlap incorrect');
+console.log(JSON.stringify({oldSpacerNowInVoid:true,newPadsTouchFlatShell:true,padCount:pads,padCornersChecked:padCorners,forwardOverhangMm:100}));
 
+const {buildExternalIO}=await import(equipmentURL),io=buildExternalIO();let crossings=0;
+io.root.traverse(o=>{if(!o.isMesh||!o.geometry.parameters.path||!(/DC -|HDMI -|Reader USB/.test(o.name)))return;
+ const curve=o.geometry.parameters.path,r=o.geometry.parameters.radius;
+ for(const plane of [-370,-361]){let prev=curve.getPoint(0);for(let i=1;i<=4000;i++){
+  const now=curve.getPoint(i/4000);if((prev.z<plane&&now.z>=plane)||(prev.z>=plane&&now.z<plane)){
+   const t=(plane-prev.z)/(now.z-prev.z),x=prev.x+(now.x-prev.x)*t,y=prev.y+(now.y-prev.y)*t;
+   if(x>=-534&&x<=-332&&y>=659&&y<=741){if(Math.hypot(x+388,y-700)+r>22.5)throw Error('Cable clips rear opening: '+o.name);crossings++;}
+  }prev=now;
+ }}});
+if(crossings!==6)throw Error('Expected six cable crossings');
+console.log(JSON.stringify({threeRoutesClearRearOpening:true,rearPanelCrossings:crossings}));
 const old=fs.readFileSync(p+'dist/models/forher-recorder-v9-photo-cart.glb'),jl=old.readUInt32LE(12),g=JSON.parse(old.subarray(20,20+jl));let bin=Buffer.from(old.subarray(28+jl,28+jl+old.readUInt32LE(20+jl)));
 function accessor(a,size,type,target){bin=Buffer.concat([bin,Buffer.alloc((4-bin.length%4)%4)]);const bytes=Buffer.from(a.buffer,a.byteOffset,a.byteLength),offset=bin.length;bin=Buffer.concat([bin,bytes]);const view=g.bufferViews.push({buffer:0,byteOffset:offset,byteLength:bytes.length,target})-1,x={bufferView:view,componentType:a instanceof Float32Array?5126:a instanceof Uint32Array?5125:5123,count:a.length/size,type};if(type==='VEC3'){x.min=Array(size).fill(Infinity);x.max=Array(size).fill(-Infinity);for(let i=0;i<a.length;i++){const k=i%size;x.min[k]=Math.min(x.min[k],a[i]);x.max[k]=Math.max(x.max[k],a[i]);}}return g.accessors.push(x)-1;}
-const mats=new Map();function material(m){if(mats.has(m.uuid))return mats.get(m.uuid);const color=m.map?new THREE.Color('#caa375'):m.color;const x={name:m.map?'Natural plywood (solid export)':m.name||'V11 material',pbrMetallicRoughness:{baseColorFactor:[...color.toArray(),m.opacity??1],metallicFactor:m.metalness??0,roughnessFactor:m.roughness??.8}};if(m.transparent)x.alphaMode='BLEND';if(m.side===2)x.doubleSided=true;const id=g.materials.push(x)-1;mats.set(m.uuid,id);return id;}
+const mats=new Map();function material(m){if(mats.has(m.uuid))return mats.get(m.uuid);const color=m.map?new THREE.Color('#caa375'):m.color;const x={name:m.map?'Natural plywood (solid export)':m.name||'V12 material',pbrMetallicRoughness:{baseColorFactor:[...color.toArray(),m.opacity??1],metallicFactor:m.metalness??0,roughnessFactor:m.roughness??.8}};if(m.transparent)x.alphaMode='BLEND';if(m.side===2)x.doubleSided=true;const id=g.materials.push(x)-1;mats.set(m.uuid,id);return id;}
 function node(o){o.updateMatrix();const n={name:o.name,matrix:o.matrix.toArray()},id=g.nodes.push(n)-1;if(o.isMesh&&!(o.material.isMeshBasicMaterial&&o.material.map)){const geo=o.geometry,attrs={};for(const [key,size,type,gl] of [['position',3,'VEC3','POSITION'],['normal',3,'VEC3','NORMAL'],['uv',2,'VEC2','TEXCOORD_0']])if(geo.attributes[key])attrs[gl]=accessor(geo.attributes[key].array,size,type,34962);const prim={attributes:attrs,material:material(o.material),mode:4};if(geo.index)prim.indices=accessor(geo.index.array,1,'SCALAR',34963);n.mesh=g.meshes.push({name:o.name,primitives:[prim]})-1;}if(o.children.length)n.children=o.children.map(node);return id;}
 const box=g.nodes.find(n=>n.name?.startsWith('Compact enclosure 220W'));if(!box)throw Error('Missing box root');box.matrix=product.main.matrix.toArray();box.children=product.main.children.map(node);const oldCart=g.nodes.find(n=>n.name?.startsWith('Ultrasound cart - photo-informed'));if(!oldCart)throw Error('Missing cart root');oldCart.children=cart.children.map(node);
-const {buildExternalIO}=await import(equipmentURL);const oldIO=g.nodes.find(n=>n.name==='External power adapter and three separate signal routes');if(!oldIO)throw Error('Missing I/O root');oldIO.children=buildExternalIO().root.children.map(node);
-g.asset.generator='ForHer V11 source geometry - forward support across empty rear handle gap';g.buffers[0].byteLength=bin.length;
-let jb=Buffer.from(JSON.stringify(g));jb=Buffer.concat([jb,Buffer.alloc((4-jb.length%4)%4,32)]);bin=Buffer.concat([bin,Buffer.alloc((4-bin.length%4)%4)]);const head=Buffer.alloc(20);head.writeUInt32LE(0x46546c67,0);head.writeUInt32LE(2,4);head.writeUInt32LE(28+jb.length+bin.length,8);head.writeUInt32LE(jb.length,12);head.writeUInt32LE(0x4e4f534a,16);const bh=Buffer.alloc(8);bh.writeUInt32LE(bin.length,0);bh.writeUInt32LE(0x004e4942,4);fs.writeFileSync(p+'dist/models/forher-recorder-v11-forward-support.glb',Buffer.concat([head,jb,bh,bin]));
-console.log(JSON.stringify({rearUOpenToTop:true,frontPowerHoleClear:true,frontStaysFixed:true,lidOpensLeft95:true,lidBottomMinimumMm:minLidY,explosionCorrect:true,GLB:'V11 generated from current model source'}));
+const oldIO=g.nodes.find(n=>n.name==='External power adapter and three separate signal routes');if(!oldIO)throw Error('Missing I/O root');oldIO.children=io.root.children.map(node);
+g.asset.generator='ForHer V12 source geometry - forward support across empty rear handle gap';g.buffers[0].byteLength=bin.length;
+let jb=Buffer.from(JSON.stringify(g));jb=Buffer.concat([jb,Buffer.alloc((4-jb.length%4)%4,32)]);bin=Buffer.concat([bin,Buffer.alloc((4-bin.length%4)%4)]);const head=Buffer.alloc(20);head.writeUInt32LE(0x46546c67,0);head.writeUInt32LE(2,4);head.writeUInt32LE(28+jb.length+bin.length,8);head.writeUInt32LE(jb.length,12);head.writeUInt32LE(0x4e4f534a,16);const bh=Buffer.alloc(8);bh.writeUInt32LE(bin.length,0);bh.writeUInt32LE(0x004e4942,4);fs.writeFileSync(p+'dist/models/forher-recorder-v12-15cm-support.glb',Buffer.concat([head,jb,bh,bin]));
+console.log(JSON.stringify({rearUOpenToTop:true,frontPowerHoleClear:true,frontStaysFixed:true,lidOpensLeft95:true,lidBottomMinimumMm:minLidY,explosionCorrect:true,GLB:'V12 generated from current model source'}));

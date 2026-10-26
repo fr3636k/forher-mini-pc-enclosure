@@ -32,6 +32,25 @@ try {
   camera.position.set(750, 540, 860);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 80, 20);
+  // Scrolling belongs to the page; explicit buttons control model zoom.
+  controls.enableZoom = false;
+  controls.touches.ONE = -1;
+  controls.touches.TWO = -1;
+  renderer.domElement.style.touchAction = 'pan-y';
+  const touchUi=window.matchMedia('(pointer: coarse), (max-width: 750px)');
+  function setTouchMode(active=false){
+    controls.touches.ONE=active?THREE.TOUCH.ROTATE:-1;
+    controls.touches.TWO=active?THREE.TOUCH.DOLLY_PAN:-1;
+    renderer.domElement.style.touchAction=active?'none':'pan-y';
+    stage.classList.toggle('touch-interaction-active',active);
+    const button=document.getElementById('touch-mode');
+    button.setAttribute('aria-pressed',String(active));
+    button.textContent=active?'返回滑頁':'觸控旋轉';
+    document.getElementById('interaction-hint').textContent=active?'拖曳旋轉 · 點「返回滑頁」繼續閱讀':touchUi.matches?'上下滑頁 · 點「觸控旋轉」操作模型':'拖曳旋轉 · ＋／−縮放 · 滾輪捲頁';
+  }
+  document.getElementById('touch-mode').addEventListener('click',()=>setTouchMode(document.getElementById('touch-mode').getAttribute('aria-pressed')!=='true'));
+  touchUi.addEventListener('change',()=>setTouchMode(false));
+  setTouchMode(false);
   controls.enableDamping = true;
   controls.dampingFactor = 0.075;
   controls.minDistance = 220;
@@ -127,18 +146,18 @@ try {
     size: {
       camera: [380,270,440],target: [0,35,0],caption: "04 / 主機尺寸",
       title: "主機本體放得下",
-      copy: "深色為驗證主機，紫框為木盒內部空間。尺寸皆為寬 × 深 × 高。",
+      copy: "深色為14 × 14 × 6 cm驗證本體，紫框為盒內空間。下列為級距示意，非市場極值或統計平均。",
       specs: [
-        ["最小參考", "約 7 × 7 × 4.5 cm"],
-        ["平均參考", "約 13 × 13 × 5 cm"],
-        ["最大參考", "約 18 × 18 × 6 cm"],
+        ["小型示意", "約 7 × 7 × 4.5 cm"],
+        ["中型示意", "約 13 × 13 × 5 cm"],
+        ["較大示意", "約 18 × 18 × 6 cm"],
       ],
     },
   };
   const planningPresets={
     internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；掀開上蓋，即可取出設備；前板固定。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
     size:{...presets.size,caption:"04 / 主機尺寸",detail:''},
-    mount:{camera:[-1550,1130,820],target:[-325,725,-165],caption:"04 / 掛鉤與前伸支撐",title:"先向前跨過懸空區，再靠住機身",copy:"木盒仍掛在後把手左側。下方木條沿機器前方延伸，兩塊軟墊在前端接觸機身側面。",specs:[["支撐方向","向機器前方，不只是側向加厚"],["示意木條","總長240 × 厚32 × 高30 mm"],["超出盒前緣","約150 mm，待實機量測"]],detail:'<b>把手下方是懸空的</b><p>支撐臂先固定在木盒側面下緣，再向前跨過空隙；前端軟墊靠機身左側，防止木盒傾斜。32 mm 是側向厚度，不是向前伸出的長度。</p><small>240 mm總長、150 mm突出量皆為模型估算。掛好空盒後，量到可承壓機身的位置再裁切；避開風口、接頭和薄蓋板，確認固定處不會轉動。</small>'},
+    mount:{camera:[-1550,1130,820],target:[-325,725,-165],caption:"04 / 掛鉤與前伸支撐",title:"先向前跨過懸空區，再靠住機身",copy:"木盒仍掛在後把手左側。下方木條沿機器前方延伸，兩塊軟墊在前端接觸機身側面。",specs:[["支撐方向","向機器前方，不只是側向加厚"],["示意木條","總長150 × 厚30 × 高30 mm"],["固定／突出","約50／100 mm，待實機確認"]],detail:'<b>把手下方是懸空的</b><p>支撐臂先固定在木盒側面下緣，再向前跨過空隙；前端軟墊靠機身左側，防止木盒傾斜。木條總長15公分，包含5公分固定段與10公分突出段；截面3 × 3公分。</p><small>15公分為討論上限；軟墊示意厚6 mm，依側向間隙調整。實機若碰不到機身，須調整掛位或重新設計；固定強度與接觸面仍須現場確認。</small>'},
   };
   const routeBase={camera:[-2300,1450,1600],target:[-180,670,-120],caption:"01 / 線路檢視"};
   const routePresets={
@@ -187,8 +206,8 @@ try {
       ["inside"],
     );
   addHotspot('G 雙 J 鉤 ×2 · 高149／出53／寬28（估）',product.boards.G,[145,215,25],['inside']);
-  addHotspot('H 前伸臂 · 長240／厚32／高30（估）',product.boards.H,[135,45,160],['inside']);
-  addHotspot('I 軟墊 ×2 · 厚4／高30／寬18（估）',product.boards.I,[160,35,242],['inside']);
+  addHotspot('H 前伸臂 · 長150／厚30／高30（估）',product.boards.H,[135,45,135],['inside']);
+  addHotspot('I 軟墊 ×2 · 厚6／高30／寬18（估）',product.boards.I,[160,35,192],['inside']);
   addHotspot("寬 14 cm",sizeView,[0,4,101],["plan-size"]);
   addHotspot("深 14 cm",sizeView,[103,4,0],["plan-size"]);
   addHotspot("高 6 cm",sizeView,[-100,45,65],["plan-size"]);
@@ -198,8 +217,8 @@ try {
   addHotspot("防滑墊，直接放置",planning.internal,[-78,42,90],["plan-internal"]);
   addHotspot("上方雙 J 掛鉤",planning.hook,[-335,850,-235],["plan-mount"]);
   addHotspot("向後突出的把手",planning.hook,[-150,855,-337],["plan-mount"]);
-  addHotspot("向前跨過懸空區",planning.hook,[-307,715,-145],["plan-mount"]);
-  addHotspot("前端軟墊接觸機身",planning.hook,[-287,700,-26],["plan-mount"]);
+  addHotspot("向前跨過懸空區",planning.hook,[-308,715,-130],["plan-mount"]);
+  addHotspot("前端軟墊接觸機身",planning.hook,[-287,700,-74],["plan-mount"]);
   addHotspot("院內核可插座",planning.io,[-760,230,-370],["plan-io"],"power");
   addHotspot("原廠變壓器・盒外固定",planning.io,[-185,475,-145],["plan-io"],"power");
   addHotspot("超音波 HDMI 輸出",planning.io,[-289,805,-70],["plan-io"],"video");
@@ -265,6 +284,7 @@ try {
     requestRender();
   }
   function setView(v) {
+    setTouchMode(false);
     view = v;
     const p = v === "planning" ? planningPresets[planningMode] : v === "overview" ? routePresets[overviewRoute] : presets[v];
     const isSize=v==='planning'&&planningMode==='size';
@@ -378,7 +398,17 @@ try {
     if (view !== "inside") setView("inside");
     setExplode(value);
   });
-  document.getElementById("reset").addEventListener("click", frame);
+  function zoomModel(factor){
+    transition=null;
+    const offset=camera.position.clone().sub(controls.target),distance=offset.length();
+    const next=THREE.MathUtils.clamp(distance*factor,controls.minDistance,controls.maxDistance);
+    camera.position.copy(controls.target).add(offset.setLength(next));
+    controls.update();requestRender();
+    document.getElementById('zoom-status').textContent=next===distance?'已到縮放範圍':factor<1?'已放大模型':'已縮小模型';
+  }
+  document.getElementById('zoom-in').addEventListener('click',()=>zoomModel(1/1.18));
+  document.getElementById('zoom-out').addEventListener('click',()=>zoomModel(1.18));
+  document.getElementById("reset").addEventListener("click",()=>{setTouchMode(false);frame();document.getElementById('zoom-status').textContent='已重設視角';});
   controls.addEventListener("start", () => {
     transition = null;
     requestRender();
@@ -398,8 +428,8 @@ try {
     cart.updateMatrixWorld(true);
     const clone = new THREE.Group();
     clone.name = fullScene
-      ? "ForHer V11 - ultrasound and recorder scene"
-      : "ForHer V11 - recorder box and reader";
+      ? "ForHer V12 - ultrasound and recorder scene"
+      : "ForHer V12 - recorder box and reader";
     const productsClone=product.root.clone(true);productsClone.visible=true;clone.add(productsClone);
     if (fullScene) {
       const context = cart.clone(true);
@@ -421,8 +451,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v11-forward-support.glb";
-    a.download = "forher-recorder-v11-forward-support.glb";
+    a.href = "./models/forher-recorder-v12-15cm-support.glb";
+    a.download = "forher-recorder-v12-15cm-support.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);

@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
 // All dimensions are illustrative millimetres until the actual handle and shell are measured.
-export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{length:240,height:30,projection:32,forwardOverhang:150,quantity:1},pad:{width:18,height:30,thickness:4,quantity:2},allDimensionsEstimated:true};
+export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{length:150,height:30,projection:30,fixedOverlap:50,forwardOverhang:100,quantity:1},pad:{width:18,height:30,thickness:6,quantity:2},allDimensionsEstimated:true};
 export const installation = {
   box: [-433, 650, -260], reader: [-410, 930, 185], rotationY: 0,
-  handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], supportArmLengthMm: 240, supportForwardOverhangMm: 150,
+  handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], supportArmLengthMm: 150, supportForwardOverhangMm: 100,
 };
 const materials = {
   metal: new THREE.MeshStandardMaterial({color:'#a2aaa5',metalness:.65,roughness:.35}),
@@ -41,14 +41,14 @@ export function buildFixings() {
     box(hook,'Removable anti-lift screw stop - provisional',[43,4,5],[138.5,147,z]);
   }
   // +Z points toward the operator/front of the ultrasound machine.
-  // The first 90 mm is beside the box; the next 150 mm bridges the rear handle void.
-  const wood=group('H forward support arm - estimated length 240');mounting.add(wood);
-  box(wood,'Forward support arm 240L 32W 30H - spans rear void',[32,30,240],[126,25,140],materials.wood);
-  for(const z of [40,80]) screw(wood,109,25,z);
+  // The first 50 mm is beside the box; the next 100 mm bridges the rear handle void.
+  const wood=group('H forward support arm - estimated length 150');mounting.add(wood);
+  box(wood,'Forward support arm 150L 30W 30H - spans rear void',[30,30,150],[125,25,135],materials.wood);
+  for(const z of [72,98]) screw(wood,109,25,z);
   const pads=group('I forward end contact pads - 2 pieces');mounting.add(pads);
-  for(const z of [220,248]) box(pads,'Rubber contact pad - front end at real shell',[4,30,18],[144,25,z],materials.rubber);
+  for(const z of [174,198]) box(pads,'Rubber contact pad - front end at real shell',[6,30,18],[143,25,z],materials.rubber);
   const restraints=group('Loose equipment on non-slip base pads');
-  box(restraints,'PC non-slip base pad',[132,7,132],[-29,12.5,24],materials.rubber);
+  box(restraints,'PC non-slip base pad',[128,7,128],[-29,12.5,24],materials.rubber);
   box(restraints,'Capture non-slip base pad',[49,6,94],[67,12,15],materials.rubber);
   return {mounting,restraints,parts:{G:hooks,H:wood,I:pads}};
 }
