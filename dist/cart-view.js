@@ -3,7 +3,7 @@ import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 import { buildRearHandle } from './equipment-view.js';
 
 // Photo-informed proportions only. All geometry uses mm, not surveyed machine dimensions.
-export const cartDimensions={consoleWidth:620,consoleDepth:480,consolePitchDeg:14,bodyWidth:418.5,bodyHeight:527};
+export const cartDimensions={consoleWidth:620,consoleDepth:480,consolePitchDeg:14,bodyWidth:438.5,bodyHeight:527};
 const mat=(color,roughness=.65,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
 const ivory=mat('#deded5'),panel=mat('#62778b'),rim=mat('#8899a5'),dark=mat('#242d34'),cream=mat('#eeeadb'),metal=mat('#a7adb0',.35,.55),screenMat=mat('#18232d',.3),green=mat('#8fae89');
 function group(parent,name){const g=new THREE.Group();g.name=name;parent?.add(g);return g;}
@@ -15,7 +15,7 @@ function ring(parent,name,r,pos,m=cream){const o=new THREE.Mesh(new THREE.TorusG
 export function buildUltrasoundCart(){
  const root=group(null,'Ultrasound cart - photo-informed shape, dimensions assumed');
  // The handle projects behind the shell: no body exists under the hanging box.
- block(root,'Rounded lower machine body',[418.5,527,341],[-77.75,545.6,61.25],ivory,12);
+ block(root,'Rounded lower machine body',[438.5,527,341],[-87.75,545.6,61.25],ivory,12);
  block(root,'Lower skirt transition',[440,140,350],[-77.5,260,72],ivory,22);
  block(root,'Wheeled pedestal',[535,55,440],[-77.5,173,25],ivory,22);
  block(root,'Front equipment bay',[305,220,14],[-77.5,565,236],dark,9);
@@ -72,7 +72,7 @@ export function buildUltrasoundCart(){
  for(let i=0;i<7;i++)block(monitor,'Monitor side menu tile',[28,11,1],[218,95-i*22,25],mat('#3c5968'),1);
  // The grip remains behind the body; only the side legs extend forward to attach.
  root.add(buildRearHandle());
- block(root,'Ultrasound HDMI output placeholder',[4,12,22],[-289,759.5,-70],dark,1);
+ block(root,'Ultrasound HDMI output placeholder',[4,12,22],[-309,759.5,-70],dark,1);
  root.userData={dimensionsAssumed:true,photoReferenceOnly:true,consoleRearHigherThanFront:true,noPatientImages:true};
  return root;
 }

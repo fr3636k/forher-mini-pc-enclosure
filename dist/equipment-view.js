@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // All dimensions are illustrative millimetres until the actual handle and shell are measured.
-export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{length:150,height:30,projection:10,fixedOverlap:50,forwardOverhang:100,quantity:1},endBlock:{length:42,height:30,thickness:20,quantity:1},pad:{width:18,height:30,thickness:6,quantity:2},allDimensionsEstimated:true};
+export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{length:150,height:30,projection:10,fixedOverlap:50,forwardOverhang:100,quantity:1},pad:{width:18,height:30,thickness:6,quantity:2},allDimensionsEstimated:true};
 export const installation = {
   box: [-433, 650, -260], reader: [-410, 930, 185], rotationY: 0,
   handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], supportArmLengthMm: 150, supportForwardOverhangMm: 100,
@@ -44,10 +44,9 @@ export function buildFixings() {
   // The first 50 mm is beside the box; the next 100 mm bridges the rear handle void.
   const wood=group('H forward support arm - estimated length 150');mounting.add(wood);
   box(wood,'Forward support arm 150L 10W 30H - spans rear void',[10,30,150],[115,25,135],materials.wood);
-  box(wood,'End packing block 42L 20W 30H - provisional',[20,30,42],[130,25,186],materials.wood);
   for(const z of [72,98]) screw(wood,109,25,z);
   const pads=group('I forward end contact pads - 2 pieces');mounting.add(pads);
-  for(const z of [174,198]) box(pads,'Rubber contact pad - front end at real shell',[6,30,18],[143,25,z],materials.rubber);
+  for(const z of [174,198]) box(pads,'Rubber contact pad - front end at real shell',[6,30,18],[123,25,z],materials.rubber);
   const restraints=group('Loose equipment on non-slip base pads');
   box(restraints,'PC non-slip base pad',[128,7,128],[-29,12.5,24],materials.rubber);
   box(restraints,'Capture non-slip base pad',[49,6,94],[67,12,15],materials.rubber);
@@ -81,7 +80,7 @@ export function buildExternalIO() {
   tube(power,'DC - adapter through enclosure U notch to PC DC input',[[-140,430,-145],[-140,560,-430],[-330,650,-450],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
   box(power,'PC DC socket indicative',[9,8,4],mountedPoint([-15,43,-40]),materials.rubber);
   const video=group('Video route - HDMI capture and its USB output'); root.add(video);
-  tube(video,'HDMI - ultrasound to existing capture input',[[-289,759.5,-70],[-350,790,-390],[-360,770,-430],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
+  tube(video,'HDMI - ultrasound to existing capture input',[[-309,759.5,-70],[-350,790,-390],[-360,770,-430],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
   tube(video,'Video USB - capture to PC',[[67,25,62],[90,24,80],[90,24,-75],[-65,30,-75],[-64,43,87]].map(mountedPoint),2,'#3e7ed4');
   const reader=group('Card reader USB route'); root.add(reader);
   tube(reader,'Reader USB - through enclosure U notch to PC',[[-370,943,137],[-440,925,-50],[-450,850,-420],[-400,740,-405],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');

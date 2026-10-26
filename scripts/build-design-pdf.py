@@ -22,7 +22,7 @@ PURPLE='#7a2cb0';MUTED='#675b70';LINE='#dfd4e7';WOOD='#d9b789';STEEL='#a7afb5';R
 # Diagrams share 1 SVG unit = 1 mm with the six existing board cards.
 cards={
 'G':('雙 J 鉤 · 2 件',f'''<path d="M100 192 V43 H153 V76 H149 V48 H104 V192 Z" fill="{STEEL}" stroke="#63707a"/><rect x="205" y="43" width="28" height="149" fill="{STEEL}" stroke="#63707a"/><path d="M91 43 V192 M100 205 H153" stroke="{PURPLE}"/><text x="81" y="120" transform="rotate(-90 81 120)" text-anchor="middle">149 高（估）</text><text x="126" y="220" text-anchor="middle">53 伸出（估）</text><text x="219" y="210" text-anchor="middle">28 寬</text><text x="126" y="250" text-anchor="middle">鋼片 4／頂橋 5・內開口 43（估）</text>''','上方承掛，尺寸與開口依把手確認。'),
-'H':('支撐臂＋墊塊 · 各1件',f'''<rect x="75" y="95" width="150" height="30" fill="{WOOD}" stroke="#795f41"/><path d="M75 140 H225 M63 95 V125" stroke="{PURPLE}"/><text x="150" y="158" text-anchor="middle">150 總長（估）／向機器前方 →</text><text x="55" y="110" transform="rotate(-90 55 110)" text-anchor="middle">30 高</text><rect x="105" y="180" width="10" height="30" fill="{WOOD}" stroke="#795f41"/><text x="110" y="228" text-anchor="middle">木條厚10</text><rect x="195" y="180" width="20" height="30" fill="{WOOD}" stroke="#795f41"/><text x="205" y="228" text-anchor="middle">端墊塊厚20</text><text x="150" y="255" text-anchor="middle">端墊塊42長×20厚×30高（估）</text>''','向前跨過懸空區，前端才接觸機身。'),
+'H':('支撐臂 · 1件',f'''<rect x="75" y="95" width="150" height="30" fill="{WOOD}" stroke="#795f41"/><path d="M75 140 H225 M63 95 V125" stroke="{PURPLE}"/><text x="150" y="158" text-anchor="middle">150 總長（估）／向機器前方 →</text><text x="55" y="110" transform="rotate(-90 55 110)" text-anchor="middle">30 高</text><rect x="105" y="180" width="10" height="30" fill="{WOOD}" stroke="#795f41"/><text x="110" y="228" text-anchor="middle">木條厚10</text><text x="150" y="255" text-anchor="middle">軟墊直接貼木條前端</text>''','向前跨過懸空區，前端才接觸機身。'),
 'I':('接觸軟墊 · 2 件',f'''<rect x="105" y="105" width="18" height="30" fill="{RUBBER}"/><rect x="145" y="105" width="18" height="30" fill="{RUBBER}"/><rect x="220" y="105" width="6" height="30" fill="{RUBBER}"/><text x="114" y="158" text-anchor="middle">18 寬</text><text x="222" y="158" text-anchor="middle">6 厚</text><text x="91" y="120" transform="rotate(-90 91 120)" text-anchor="middle">30 高</text><text x="150" y="215" text-anchor="middle">6 × 30 × 18 mm／件（估）</text><text x="150" y="242" text-anchor="middle">移到前伸臂前端，靠住實際機身</text>''','前端兩點靠機身，保護表面並止擺。')}
 svgs={}
 for key,(title,body,note) in cards.items():
@@ -65,7 +65,7 @@ for spec in boardSpecs:
 sheet='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">'+''.join(f'<svg x="{(i%3)*300}" y="{(i//3)*280}" width="300" height="280" viewBox="0 0 300 280">'+a[a.index('>')+1:a.rfind('</svg>')]+'</svg>' for i,a in enumerate(allSVG))+'</svg>'
 (DIST/'boards.svg').write_text(sheet,encoding='utf8')
 
-buf=BytesIO();W,H=landscape(A3);c=canvas.Canvas(buf,pagesize=(W,H));c.setTitle('豐禾小型主機木盒：固定件參考尺寸 V13')
+buf=BytesIO();W,H=landscape(A3);c=canvas.Canvas(buf,pagesize=(W,H));c.setTitle('豐禾小型主機木盒：固定件參考尺寸 V14')
 def txt(x,y,s,size=11,color=MUTED):c.setFillColor(HexColor(color));c.setFont(FONT,size);c.drawString(x,y,s)
 def wrap(x,y,s,width,size=10,leading=17):
  line=''
@@ -86,7 +86,7 @@ def dim(x1,y1,x2,y2,label,vertical=False):
  else:
   line(x1,y1-3,x1,y1+3);line(x2,y2-3,x2,y2+3);c.setFont(FONT,10);c.setFillColor(HexColor(PURPLE));c.drawCentredString((x1+x2)/2,y1-15,label)
 txt(36,H-45,'豐禾｜小型主機木盒：掛鉤與下方支撐',22,PURPLE)
-txt(36,H-68,'V13 參考估算 / 單位 mm / 各組視圖縮放不同，尺寸以數字為準，非 1:1 加工樣板',11)
+txt(36,H-68,'V14 參考估算 / 單位 mm / 各組視圖縮放不同，尺寸以數字為準，非 1:1 加工樣板',11)
 cardY=329;cardH=H-425;cardW=(W-108)/3
 for i,key in enumerate(['G','H','I']):
  x=36+i*(cardW+18);rect(x,cardY,cardW,cardH,'#fcf9ff',LINE,10);txt(x+18,H-121,f'{key} / {cards[key][0]}',14,PURPLE)
@@ -104,10 +104,10 @@ hx=36+cardW+18;sc=1.1
 rect(hx+40,580,150*sc,30*sc,WOOD,'#795f41')
 dim(hx+40,563,hx+40+150*sc,563,'150 總長（估）');dim(hx+26,580,hx+26,613,'30 高',True)
 txt(hx+40,639,'側視：向機器前方延伸 →',11)
-rect(hx+70,480,10*1.5,30*1.5,WOOD,'#795f41');dim(hx+70,465,hx+85,465,'木條厚10');rect(hx+210,480,20*1.5,30*1.5,WOOD,'#795f41');dim(hx+210,465,hx+240,465,'墊塊厚20')
-txt(hx+70,535,'木條端面',10);txt(hx+210,535,'局部端墊塊',10)
-wrap(hx+18,430,'木條150長 × 10厚 × 30高；固定50、突出100。另加端墊塊42長 × 20厚 × 30高，各1件，依間隙調整。',cardW-36,11,19)
-wrap(hx+18,365,'1公分木條的剛性、固定方式與端墊塊接合須由木工確認。此為尺寸示意，非承重或加工定稿。',cardW-36,10,16)
+rect(hx+70,480,10*1.5,30*1.5,WOOD,'#795f41');dim(hx+70,465,hx+85,465,'木條厚10')
+txt(hx+70,535,'木條端面',10)
+wrap(hx+18,430,'木條150長 × 10厚 × 30高；固定50、突出100。共1件；兩片軟墊直接貼在木條前端。',cardW-36,11,19)
+wrap(hx+18,365,'1公分木條的剛性、固定方式與實機間隙須由木工確認。此為尺寸示意，非承重或加工定稿。',cardW-36,10,16)
 # Rubber pads, same enlargement for width, height and thickness.
 ix=36+2*(cardW+18);sp=2.7
 for x in [ix+70,ix+145]:rect(x,538,18*sp,30*sp,RUBBER,RUBBER)
@@ -116,23 +116,23 @@ wrap(ix+18,458,'每件暫估 6 厚 × 30 高 × 18 寬，共 2 件。尺寸隨�
 wrap(ix+18,379,'軟墊接觸確認可承壓的機身部位，避開風口、接頭及薄蓋板；避免硬木直接頂壓。',cardW-36,10,16)
 # Parts list and installation plan.
 txt(36,294,'參考數量與定案方式',14,PURPLE)
-rows=[('G','雙 J 鉤','2 件','高149 × 伸出53 × 寬28；開口與板厚依五金確認'),('H','木條／端墊塊','各1件','木條150×10×30；端墊塊42×20×30（估）'),('I','接觸軟墊','2 件','每件厚6 × 高30 × 寬18（估）')]
+rows=[('G','雙 J 鉤','2 件','高149 × 伸出53 × 寬28；開口與板厚依五金確認'),('H','支撐臂','1 件','長150 × 厚10 × 高30（估）'),('I','接觸軟墊','2 件','每件厚6 × 高30 × 寬18（估）')]
 for i,(k,name,q,detail) in enumerate(rows):
  y=250-i*47;rect(36,y-10,688,42,'#f7f1fb' if i%2==0 else '#ffffff');txt(48,y+7,k,12,PURPLE);txt(76,y+7,name,11);txt(185,y+7,q,11);txt(242,y+7,detail,10)
 wrap(36,100,'掛鉤固定可先以 M4 × 30 穿板螺栓 4 組、44 × 32 × 2 內側背板 2 件討論；孔位和螺栓長度須按實物五金確認。金屬鉤交由成品五金或金工配合，木工負責板件、木條與開孔。',688,10,17)
 tx=790;txt(tx,294,'俯視：木盒後掛左側，支撐向前',13,PURPLE)
-rect(tx+150,80,170,100,'#e5e7e2','#8a928b',10);txt(tx+202,120,'機身',13)
-line(tx+150,180,tx+150,273,'#727f78');line(tx+150,273,tx+320,273,'#727f78');line(tx+320,273,tx+320,180,'#727f78')
+rect(tx+139.3,80,180.7,100,'#e5e7e2','#8a928b',10);txt(tx+202,120,'機身',13)
+line(tx+139.3,180,tx+150,273,'#727f78');line(tx+150,273,tx+320,273,'#727f78');line(tx+320,273,tx+320,180,'#727f78')
 rect(tx+45,198,85,85,WOOD,'#795f41');txt(tx+62,235,'木盒',11)
 for y in [233,262]:rect(tx+128,y,24,8,STEEL,'#63707a')
-rect(tx+130,148,5.3,77,WOOD,'#795f41');rect(tx+135.3,148,10.7,32,WOOD,'#795f41');rect(tx+146,150,4,12,RUBBER,RUBBER);rect(tx+146,166,4,12,RUBBER,RUBBER);txt(tx+180,210,'此處懸空',11);txt(tx+20,97,'木條向前 ↓',10,PURPLE)
+rect(tx+130,148,5.3,77,WOOD,'#795f41');rect(tx+135.3,150,4,12,RUBBER,RUBBER);rect(tx+135.3,166,4,12,RUBBER,RUBBER);txt(tx+180,210,'此處懸空',11);txt(tx+20,97,'木條向前 ↓',10,PURPLE)
 txt(tx+173,65,'前方 / 操作面板 ↓（非尺寸比例）',9);txt(tx+174,311,'後方 ↑',10)
 line(36,48,W-36,48,LINE);txt(36,30,'僅供討論與估價：所有固定件尺寸為估算，非承重驗證或最終加工定稿。箱體板件見第 1 頁。',9);txt(W-80,30,'2 / 2',9)
 c.showPage();c.save();buf.seek(0)
 # Rebuild page 1 from current dimensions rather than overlaying an older drawing.
 first=BytesIO();p=canvas.Canvas(first,pagesize=(W,H))
 def pt(x,y,t,size=10,color=MUTED):p.setFillColor(HexColor(color));p.setFont(FONT,size);p.drawString(x,y,t)
-pt(36,H-43,'豐禾｜小型主機木盒：上掀蓋與箱體板件 V13',21,PURPLE)
+pt(36,H-43,'豐禾｜小型主機木盒：上掀蓋與箱體板件 V14',21,PURPLE)
 pt(36,H-66,'外尺寸220 × 220 × 100 mm／板厚9／各1片／同一比例示意，非1:1加工圖',11)
 for i,(k,title,w,h,holes,note) in enumerate(boardSpecs):
  cellX=36+(i%3)*380;top=H-106-(i//3)*300;x=cellX+50;y=top-24-h
@@ -164,7 +164,7 @@ pt(36,103,'上蓋左側兩顆表面鉸鏈，向外掀95°；右側磁吸。前�
 pt(36,84,'後板U口向上開放，線束從上方放入；閉蓋前整理線材與護邊，不可夾線。',10)
 pt(36,65,'鉸鏈側須留約22cm外側與上方淨空，實際依現場驗證。板件外觀視圖；固定件見第2頁。',10)
 pt(W-80,30,'1 / 2',9);p.showPage();p.save();first.seek(0)
-writer=PdfWriter();writer.add_page(PdfReader(first).pages[0]);writer.add_page(PdfReader(buf).pages[0]);writer.add_metadata({'/Title':'豐禾小型主機木盒：上掀蓋與固定件 V13','/Author':'ForHer','/Subject':'參考估算，需實機確認'})
+writer=PdfWriter();writer.add_page(PdfReader(first).pages[0]);writer.add_page(PdfReader(buf).pages[0]);writer.add_metadata({'/Title':'豐禾小型主機木盒：上掀蓋與固定件 V14','/Author':'ForHer','/Subject':'參考估算，需實機確認'})
 target=OUT/'豐禾超音波錄影盒-板件與固定件設計圖.pdf'
 with target.open('wb') as f:writer.write(f)
 shutil.copyfile(target,DIST/'豐禾超音波錄影盒-板件設計圖.pdf')

@@ -179,10 +179,10 @@ function feet(parent, w, d) {
 }
 
 export function buildProducts() {
-  const products = group(null, "ForHer ultrasound recorder concept V13");
+  const products = group(null, "ForHer ultrasound recorder concept V14");
   products.userData = {
     units: "millimetres before export",
-    design: "V13 left hinged top lid with fixed front access hole",
+    design: "V14 left hinged top lid with fixed front access hole",
     manufacturingReady: false,
     mainEnvelopeMm: "220 x 220 x 100",
     computerEnvelopeMm: "124 x 124 x 53.7",
@@ -339,7 +339,6 @@ export function buildProducts() {
     0.7,
   );
   const {mounting,restraints,parts:fixtureParts}=buildFixings();main.add(mounting);equipment.add(restraints);
-  const endPackingBlock=fixtureParts.H.getObjectByName("End packing block 42L 20W 30H - provisional");
 
   const reader = group(products, "Removable health card reader and cradle");
   block(reader, "Reader cradle", 116, 5, 88, 0, 2.5, -9, graphite, 3);
@@ -484,7 +483,6 @@ export function buildProducts() {
     mounting.visible = true;
     fixtureParts.G.position.set(v*170,v*90,0);
     fixtureParts.H.position.set(v*170,-v*65,v*45);
-    endPackingBlock.position.x=130+v*35;
     fixtureParts.I.position.set(v*240,-v*65,v*45);
     equipment.visible = v === 0;
     reader.visible = v === 0;
@@ -543,7 +541,6 @@ export function buildProducts() {
     front,
     doorPivot,
     capture,
-    endPackingBlock,
     link,
     setExplode,
     setDoor,
