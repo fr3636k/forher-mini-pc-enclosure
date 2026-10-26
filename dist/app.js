@@ -138,7 +138,7 @@ try {
   const planningPresets={
     internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；掀開上蓋，即可取出設備；前板固定。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
     size:{...presets.size,caption:"04 / 主機尺寸",detail:''},
-    mount:{camera:[-1650,1350,600],target:[-270,760,-215],caption:"04 / 掛鉤與支撐",title:"木盒掛在後方把手左側",copy:"以操作面板正面為準：木盒在後方把手的左側，兩個掛鉤跨住把手左側段。",specs:[["上方","雙 J 掛鉤＋防脫螺栓"],["下方","支撐木條＋雙橡膠墊"],["木條長度","依掛好後的機身間距裁切"]],detail:'<b>為什麼要加木條？</b><p>木盒位於把手左邊外側，兩個上鉤跨在把手左側段。下方短木條靠住機身左側，末端加軟墊止擺。木條暫估跨距60、高30、伸出32 mm；寬高與伸出量均待實機確認。</p><small>照片無法確認把手承重或外殼強度。下方須頂在確認可承壓的位置，避開風口、接頭與薄蓋板；不可靠硬木直接頂壓。尺寸仍為示意。</small>'}
+    mount:{camera:[-1550,1130,820],target:[-325,725,-165],caption:"04 / 掛鉤與前伸支撐",title:"先向前跨過懸空區，再靠住機身",copy:"木盒仍掛在後把手左側。下方木條沿機器前方延伸，兩塊軟墊在前端接觸機身側面。",specs:[["支撐方向","向機器前方，不只是側向加厚"],["示意木條","總長240 × 厚32 × 高30 mm"],["超出盒前緣","約150 mm，待實機量測"]],detail:'<b>把手下方是懸空的</b><p>支撐臂先固定在木盒側面下緣，再向前跨過空隙；前端軟墊靠機身左側，防止木盒傾斜。32 mm 是側向厚度，不是向前伸出的長度。</p><small>240 mm總長、150 mm突出量皆為模型估算。掛好空盒後，量到可承壓機身的位置再裁切；避開風口、接頭和薄蓋板，確認固定處不會轉動。</small>'},
   };
   const routeBase={camera:[-2300,1450,1600],target:[-180,670,-120],caption:"01 / 線路檢視"};
   const routePresets={
@@ -187,8 +187,8 @@ try {
       ["inside"],
     );
   addHotspot('G 雙 J 鉤 ×2 · 高149／出53／寬28（估）',product.boards.G,[145,215,25],['inside']);
-  addHotspot('H 木條 · 跨60／高30／出32（估）',product.boards.H,[135,45,80],['inside']);
-  addHotspot('I 軟墊 ×2 · 厚4／高30／寬18（估）',product.boards.I,[160,35,100],['inside']);
+  addHotspot('H 前伸臂 · 長240／厚32／高30（估）',product.boards.H,[135,45,160],['inside']);
+  addHotspot('I 軟墊 ×2 · 厚4／高30／寬18（估）',product.boards.I,[160,35,242],['inside']);
   addHotspot("寬 14 cm",sizeView,[0,4,101],["plan-size"]);
   addHotspot("深 14 cm",sizeView,[103,4,0],["plan-size"]);
   addHotspot("高 6 cm",sizeView,[-100,45,65],["plan-size"]);
@@ -197,11 +197,12 @@ try {
   addHotspot("沿用的擷取卡",planning.internal,[67,52,15],["plan-internal"]);
   addHotspot("防滑墊，直接放置",planning.internal,[-78,42,90],["plan-internal"]);
   addHotspot("上方雙 J 掛鉤",planning.hook,[-335,850,-235],["plan-mount"]);
-  addHotspot("向後突出的把手",planning.hook,[-150,925,-337],["plan-mount"]);
-  addHotspot("下方支撐木條＋軟墊",planning.hook,[-285,700,-180],["plan-mount"]);
+  addHotspot("向後突出的把手",planning.hook,[-150,855,-337],["plan-mount"]);
+  addHotspot("向前跨過懸空區",planning.hook,[-307,715,-145],["plan-mount"]);
+  addHotspot("前端軟墊接觸機身",planning.hook,[-287,700,-26],["plan-mount"]);
   addHotspot("院內核可插座",planning.io,[-760,230,-370],["plan-io"],"power");
-  addHotspot("原廠變壓器・盒外固定",planning.io,[-185,475,-245],["plan-io"],"power");
-  addHotspot("超音波 HDMI 輸出",planning.io,[-306.9,805,-186],["plan-io"],"video");
+  addHotspot("原廠變壓器・盒外固定",planning.io,[-185,475,-145],["plan-io"],"power");
+  addHotspot("超音波 HDMI 輸出",planning.io,[-289,805,-70],["plan-io"],"video");
   addHotspot("HDMI → 擷取卡 → USB 主機",planning.io,[-433,785,-260],["plan-io"],"video");
   addHotspot("外接 USB 讀卡機",planning.io,[-410,990,185],["plan-io"],"reader");
   function updateHotspots() {
@@ -397,8 +398,8 @@ try {
     cart.updateMatrixWorld(true);
     const clone = new THREE.Group();
     clone.name = fullScene
-      ? "ForHer V10 - ultrasound and recorder scene"
-      : "ForHer V10 - recorder box and reader";
+      ? "ForHer V11 - ultrasound and recorder scene"
+      : "ForHer V11 - recorder box and reader";
     const productsClone=product.root.clone(true);productsClone.visible=true;clone.add(productsClone);
     if (fullScene) {
       const context = cart.clone(true);
@@ -420,8 +421,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v10-top-lid.glb";
-    a.download = "forher-recorder-v10-top-lid.glb";
+    a.href = "./models/forher-recorder-v11-forward-support.glb";
+    a.download = "forher-recorder-v11-forward-support.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);

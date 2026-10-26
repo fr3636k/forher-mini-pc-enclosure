@@ -14,12 +14,12 @@ function ring(parent,name,r,pos,m=cream){const o=new THREE.Mesh(new THREE.TorusG
 
 export function buildUltrasoundCart(){
  const root=group(null,'Ultrasound cart - photo-informed shape, dimensions assumed');
- // Preserve the shell's left contact area used by the enclosure standoff.
- block(root,'Rounded lower machine body',[418.5,527,341],[-77.5,545.6,-38.75],ivory,12);
- block(root,'Lower skirt transition',[440,140,350],[-77.5,260,-8],ivory,22);
+ // The handle projects behind the shell: no body exists under the hanging box.
+ block(root,'Rounded lower machine body',[418.5,527,341],[-77.75,545.6,61.25],ivory,12);
+ block(root,'Lower skirt transition',[440,140,350],[-77.5,260,72],ivory,22);
  block(root,'Wheeled pedestal',[535,55,440],[-77.5,173,25],ivory,22);
- block(root,'Front equipment bay',[305,220,14],[-77.5,565,136],dark,9);
- for(const y of [493,551,610]){block(root,'Front removable module face',[276,49,16],[-77.5,y,148],ivory,4);block(root,'Module slot',[155,5,3],[-92,y+6,158],dark,1);}
+ block(root,'Front equipment bay',[305,220,14],[-77.5,565,236],dark,9);
+ for(const y of [493,551,610]){block(root,'Front removable module face',[276,49,16],[-77.5,y,248],ivory,4);block(root,'Module slot',[155,5,3],[-92,y+6,258],dark,1);}
  for(const x of [-280,125])for(const z of [-145,195]){
   block(root,'Caster fork',[22,72,28],[x,115,z],metal,4);
   const wh=cylinder(root,'Caster wheel',51,26,[x,53,z],dark);wh.rotation.z=Math.PI/2;
@@ -70,9 +70,9 @@ export function buildUltrasoundCart(){
  }
  block(monitor,'Monitor lower blue status bar',[470,6,1],[0,-147,25],mat('#3c6c7a'),0);
  for(let i=0;i<7;i++)block(monitor,'Monitor side menu tile',[28,11,1],[218,95-i*22,25],mat('#3c5968'),1);
- // Keep the established rear handle and installation coordinates unchanged.
+ // The grip remains behind the body; only the side legs extend forward to attach.
  root.add(buildRearHandle());
- block(root,'Ultrasound HDMI output placeholder',[4,12,22],[-306.9,759.5,-186],dark,1);
+ block(root,'Ultrasound HDMI output placeholder',[4,12,22],[-289,759.5,-70],dark,1);
  root.userData={dimensionsAssumed:true,photoReferenceOnly:true,consoleRearHigherThanFront:true,noPatientImages:true};
  return root;
 }
