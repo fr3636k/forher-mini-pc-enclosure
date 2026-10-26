@@ -8,7 +8,7 @@ import { buildUltrasoundCart } from "./cart-view.js";
 export const dimensions = {
   main: [220, 100, 220],
   reader: [116, 24, 88],
-  version: "9.0 photo-reference cart and exploded hardware",
+  version: "10.0 left-hinged top lid and open U cable notch",
 };
 const mat = (color, roughness = 0.55, metalness = 0) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -179,10 +179,10 @@ function feet(parent, w, d) {
 }
 
 export function buildProducts() {
-  const products = group(null, "ForHer ultrasound recorder concept V4");
+  const products = group(null, "ForHer ultrasound recorder concept V10");
   products.userData = {
     units: "millimetres before export",
-    design: "V4 compact enclosure with independent hinged front door",
+    design: "V10 left hinged top lid with fixed front access hole",
     manufacturingReady: false,
     mainEnvelopeMm: "220 x 220 x 100",
     computerEnvelopeMm: "124 x 124 x 53.7",
@@ -195,8 +195,11 @@ export function buildProducts() {
   const bottom = group(main, "B Bottom 220 x 220 x 9");
   feet(bottom, 220, 220);
   block(bottom, "B bottom plywood", 220, 9, 220, 0, 4.5, 0, oak, 0);
-  const lid = group(main, "A Top 220 x 220 x 9");
-  block(lid, "A top plywood", 220, 9, 220, 0, 95.5, 0, oak, 0);
+  const doorPivot = group(main, "Top lid hinge pivot - rotate local Z to open left");
+  doorPivot.position.set(-112, 100, 0);
+  const lid = group(doorPivot, "A Top 220 x 220 x 9");
+  block(lid, "A hinged top plywood", 220, 9, 220, 112, -4.5, 0, oak, 0);
+  lid.userData={hingeSide:"left above ventilation",openingDegrees:95};
   const left = group(main, "C Left 220 x 82 x 9");
   const right = group(main, "D Right 220 x 82 x 9");
   for (const side of [-1, 1]) {
@@ -221,66 +224,33 @@ export function buildProducts() {
     p.position.set(side * 105.5, 50, 0);
   }
   const rear = group(main, "E Rear 202 x 82 x 9");
-  const back = panel(rear, "E rear cable hole diameter 45", 202, 82, 9, [
-    [45, 0, 45, 45, 22.5],
-  ]);
-  back.position.set(0, 50, -105.5);
-  const doorPivot = group(
-    main,
-    "Front door hinge pivot - rotate local Y to open",
-  );
-  doorPivot.position.set(-100, 0, 111);
-  const front = group(doorPivot, "Hinged front maintenance door 198 x 78 mm");
-  front.position.set(100, 0, -111);
-  block(
-    front,
-    "Front plywood door - 2mm edge clearance",
-    198,
-    78,
-    9,
-    0,
-    50,
-    105.5,
-    oak,
-    0,
-  );
-  block(
-    left,
-    "Hinge mounting backing strip",
-    8,
-    72,
-    8,
-    -97,
-    50,
-    95,
-    edgeOak,
-    0.5,
-  );
-  for (const y of [28, 72]) {
-    const pin = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 14, 16), steel);
-    pin.name = "Fixed vertical hinge pin";
-    pin.position.set(-100, y, 111);
-    left.add(pin);
-    block(left, "Fixed hinge leaf", 7, 13, 1.2, -105, y, 110.8, steel, 0.3);
-    block(front, "Moving hinge leaf", 7, 13, 1.2, -95, y, 110.8, steel, 0.3);
-    screw(front, -95, y, 112);
+  // Open outline: the former diameter-45 hole now continues to the upper edge.
+  const notch = new THREE.Shape();
+  notch.moveTo(-101,-41);notch.lineTo(101,-41);notch.lineTo(101,41);
+  notch.lineTo(67.5,41);notch.lineTo(67.5,0);
+  notch.absarc(45,0,22.5,0,-Math.PI,true);
+  notch.lineTo(22.5,41);notch.lineTo(-101,41);notch.closePath();
+  const backGeometry=new THREE.ExtrudeGeometry(notch,{depth:9,steps:1,bevelEnabled:false});backGeometry.translate(0,0,-4.5);
+  const back=new THREE.Mesh(backGeometry,oak);back.name="E rear open U notch - 45 wide 63.5 deep R22.5";
+  back.position.set(0,50,-105.5);back.castShadow=back.receiveShadow=true;rear.add(back);
+  // Soft U edge trim stays below the lid sweep, with no crosspiece across the opening.
+  cable(rear,"Soft protective edging on U notch",[[22.5,90,-105.5],[22.5,50,-105.5],[29.1,34.1,-105.5],[45,27.5,-105.5],[60.9,34.1,-105.5],[67.5,50,-105.5],[67.5,90,-105.5]],1.1,"#555a57");
+  const front=group(main,"F Fixed front 202 x 82 x 9 - power access diameter 30");
+  const face=panel(front,"F fixed front power access diameter 30",202,82,9,[[18,-8,30,30,15]]);
+  face.position.set(0,50,105.5);
+  // Two surface hinges above the left ventilation holes. No inset joinery.
+  for(const z of [-70,70]){
+    const pin=new THREE.Mesh(new THREE.CylinderGeometry(2,2,24,16),steel);
+    pin.name="Left top hinge pin - fixed Z axis";pin.rotation.x=Math.PI/2;pin.position.set(-112,100,z);left.add(pin);
+    block(left,"Fixed top hinge leaf",1.5,16,24,-110.8,92,z,steel,0.3);
+    block(lid,"Moving top hinge leaf",16,1.5,24,10,0.9,z,steel,0.3);
+    block(left,"Hinge screw backing block",8,12,28,-97,84,z,edgeOak,0.3);
   }
-  block(front, "Front door handle", 6, 23, 8, 78, 50, 115, graphite, 1.5);
-  block(right, "Magnetic catch backing", 7, 12, 8, 94, 50, 96, graphite, 1);
-  block(
-    front,
-    "Magnetic catch strike plate",
-    7,
-    12,
-    1,
-    93,
-    50,
-    100.5,
-    steel,
-    0.3,
-  );
-  label(front, "FORHER", 72, 11, 0, 56, 110.2, "#4b543e");
-  label(front, "ULTRASOUND RECORDER", 79, 5, 0, 39, 110.2, "#6d7158");
+  block(lid,"Top lid pull tab",16,6,24,202,5,65,graphite,1);
+  block(right,"Top lid magnetic catch",8,6,18,96,86,50,graphite,1);
+  block(lid,"Top lid magnetic strike plate",8,1,18,208,-9.5,50,steel,0.3);
+  label(front,"FORHER",72,11,-40,65,110.2,"#4b543e");
+  label(front,"ULTRASOUND RECORDER",79,5,-40,42,110.2,"#6d7158");
   const equipment = group(main, "Internal equipment");
   for (const x of [-94, 94])
     for (const z of [-93, 93])
@@ -509,7 +479,7 @@ export function buildProducts() {
     left.position.x = -v * 135;
     right.position.x = v * 135;
     rear.position.z = -v * 135;
-    doorPivot.position.z = 111 + v * 160;
+    front.position.z = v * 160;
     mounting.visible = true;
     fixtureParts.G.position.set(v*170,v*90,0);
     fixtureParts.H.position.set(v*170,-v*65,0);
@@ -537,7 +507,7 @@ export function buildProducts() {
   }
   function setDoor(degrees) {
     doorAngle = degrees;
-    doorPivot.rotation.y = -THREE.MathUtils.degToRad(degrees);
+    doorPivot.rotation.z = THREE.MathUtils.degToRad(Math.min(95, Math.max(0, degrees)));
   }
   function setState(v) {
     state = v;

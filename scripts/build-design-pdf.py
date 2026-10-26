@@ -34,7 +34,36 @@ if 'data-board="G"' not in h:
  markup=''.join(f'<button class="board-card" data-board="{k}" aria-pressed="false">{svgs[k]}<span class="board-purpose">{cards[k][2]}</span></button>' for k in cards)
  h=h[:point]+markup+'\n'+h[point:];(DIST/'index.html').write_text(h,encoding='utf8')
 
-buf=BytesIO();W,H=landscape(A3);c=canvas.Canvas(buf,pagesize=(W,H));c.setTitle('豐禾小型主機木盒：固定件參考尺寸 V9')
+# Current A-F board drawings. Web diagrams use one SVG unit per mm.
+boardSpecs=[('A','左掀上蓋',220,220,[],'左側鉸鏈，向外掀95°；右側磁吸。'),('B','底板',220,220,[],'承托設備，底部鋪防滑墊。'),('C','左側板',220,82,[(70,41,22.5),(150,41,22.5)],'雙孔通風；鉸鏈裝在通風孔上方。'),('D','右側板',220,82,[(40,41,22.5)],'備用穿線孔，依現場方向使用。'),('E','後板',202,82,[],'U口向上開放，接好線也能放入。'),('F','固定前板',202,82,[(119,33,15)],'Ø30孔操作電源，孔位依主機確認。')]
+def boardSVG(k,title,w,h,holes,note):
+ x=(300-w)/2;y=35 if h>100 else 90
+ if k=='E':
+  cx=x+56;cy=y+41;r=22.5
+  body=f'<path d="M{x} {y+h} H{x+w} V{y} H{cx+r} V{cy} A{r} {r} 0 0 1 {cx-r} {cy} V{y} H{x} Z" fill="{WOOD}" stroke="#795f41"/>'
+ else:body=f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{WOOD}" stroke="#795f41"/>'
+ for cx,cy,r in holes:body+=f'<circle cx="{x+cx}" cy="{y+h-cy}" r="{r}" fill="#fcf9ff" stroke="{PURPLE}"/>'
+ if k=='A':
+  for z in [40,180]:body+=f'<rect x="{x-3}" y="{y+z-12}" width="10" height="24" fill="{STEEL}"/>'
+ if k=='E':body+=f'<text x="150" y="205" text-anchor="middle">U口寬45／深63.5／R22.5</text>'
+ if k=='F':body+=f'<text x="150" y="205" text-anchor="middle">Ø30／孔心距左119、下33</text>'
+ body+=f'<text x="150" y="{y+h+17}" text-anchor="middle">{w} mm</text>'
+ body+=f'<text x="{x-10}" y="{y+h/2}" text-anchor="middle" transform="rotate(-90 {x-10} {y+h/2})">{h} mm</text>'
+ return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280" role="img" aria-label="{k} {title} {w}乘{h}毫米"><g font-family="sans-serif" font-size="10" fill="{MUTED}"><text x="25" y="20" font-size="12" fill="{PURPLE}">{k} / {title}　{w} × {h} × 9 mm</text>{body}</g></svg>'
+import re
+html=(DIST/'index.html').read_text(encoding='utf8')
+allSVG=[]
+for spec in boardSpecs:
+ k,title,w,h,holes,note=spec;svg=boardSVG(*spec);allSVG.append(svg)
+ (DIST/f'part-{k.lower()}.svg').write_text(svg,encoding='utf8')
+ pattern=rf'<button class="board-card" data-board="{k}".*?</button\s*>'
+ html,n=re.subn(pattern,lambda m:f'<button class="board-card" data-board="{k}" aria-pressed="false">{svg}<span class="board-purpose">{note}</span></button>',html,flags=re.S)
+ if n!=1:raise ValueError(f'Board card {k}: {n}')
+(DIST/'index.html').write_text(html,encoding='utf8')
+sheet='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">'+''.join(f'<svg x="{(i%3)*300}" y="{(i//3)*280}" width="300" height="280" viewBox="0 0 300 280">'+a[a.index('>')+1:a.rfind('</svg>')]+'</svg>' for i,a in enumerate(allSVG))+'</svg>'
+(DIST/'boards.svg').write_text(sheet,encoding='utf8')
+
+buf=BytesIO();W,H=landscape(A3);c=canvas.Canvas(buf,pagesize=(W,H));c.setTitle('豐禾小型主機木盒：固定件參考尺寸 V10')
 def txt(x,y,s,size=11,color=MUTED):c.setFillColor(HexColor(color));c.setFont(FONT,size);c.drawString(x,y,s)
 def wrap(x,y,s,width,size=10,leading=17):
  line=''
@@ -55,7 +84,7 @@ def dim(x1,y1,x2,y2,label,vertical=False):
  else:
   line(x1,y1-3,x1,y1+3);line(x2,y2-3,x2,y2+3);c.setFont(FONT,10);c.setFillColor(HexColor(PURPLE));c.drawCentredString((x1+x2)/2,y1-15,label)
 txt(36,H-45,'豐禾｜小型主機木盒：掛鉤與下方支撐',22,PURPLE)
-txt(36,H-68,'V9 參考估算 / 單位 mm / 各組視圖縮放不同，尺寸以數字為準，非 1:1 加工樣板',11)
+txt(36,H-68,'V10 參考估算 / 單位 mm / 各組視圖縮放不同，尺寸以數字為準，非 1:1 加工樣板',11)
 cardY=329;cardH=H-425;cardW=(W-108)/3
 for i,key in enumerate(['G','H','I']):
  x=36+i*(cardW+18);rect(x,cardY,cardW,cardH,'#fcf9ff',LINE,10);txt(x+18,H-121,f'{key} / {cards[key][0]}',14,PURPLE)
@@ -96,9 +125,42 @@ rect(tx+130,205,16,15,WOOD,'#795f41');rect(tx+146,205,4,15,RUBBER,RUBBER)
 txt(tx+173,65,'前方 / 操作面板 ↓',10);txt(tx+174,311,'後方 ↑',10)
 line(36,48,W-36,48,LINE);txt(36,30,'僅供討論與估價：所有固定件尺寸為估算，非承重驗證或最終加工定稿。箱體板件見第 1 頁。',9);txt(W-80,30,'2 / 2',9)
 c.showPage();c.save();buf.seek(0)
-base=PdfReader(str(DIST/'豐禾超音波錄影盒-板件設計圖.pdf'))
-overlay=BytesIO();oc=canvas.Canvas(overlay,pagesize=(W,H));oc.setFillColor(HexColor('#ffffff'));oc.rect(110,H-75,950,50,fill=1,stroke=0);oc.setFillColor(HexColor(PURPLE));oc.setFont(FONT,20);oc.drawString(134,H-57,'豐禾｜小型主機木盒 — 箱體板件 V9');oc.setFont(FONT,9);oc.drawString(W-80,30,'1 / 2');oc.save();overlay.seek(0);base.pages[0].merge_page(PdfReader(overlay).pages[0])
-writer=PdfWriter();writer.add_page(base.pages[0]);writer.add_page(PdfReader(buf).pages[0]);writer.add_metadata({'/Title':'豐禾小型主機木盒：箱體與固定件 V9','/Author':'ForHer','/Subject':'參考估算，需實機確認'})
+# Rebuild page 1 from current dimensions rather than overlaying an older drawing.
+first=BytesIO();p=canvas.Canvas(first,pagesize=(W,H))
+def pt(x,y,t,size=10,color=MUTED):p.setFillColor(HexColor(color));p.setFont(FONT,size);p.drawString(x,y,t)
+pt(36,H-43,'豐禾｜小型主機木盒：上掀蓋與箱體板件 V10',21,PURPLE)
+pt(36,H-66,'外尺寸220 × 220 × 100 mm／板厚9／各1片／同一比例示意，非1:1加工圖',11)
+for i,(k,title,w,h,holes,note) in enumerate(boardSpecs):
+ cellX=36+(i%3)*380;top=H-106-(i//3)*300;x=cellX+50;y=top-24-h
+ pt(cellX,top,f'{k} / {title}　{w} × {h} × 9 mm',13,PURPLE)
+ p.setFillColor(HexColor(WOOD));p.setStrokeColor(HexColor('#795f41'));p.setLineWidth(.8)
+ if k=='E':
+  cx=x+56;cy=y+41;r=22.5;d=.55228475*r;path=p.beginPath()
+  path.moveTo(x,y);path.lineTo(x+w,y);path.lineTo(x+w,y+h);path.lineTo(cx+r,y+h);path.lineTo(cx+r,cy)
+  path.curveTo(cx+r,cy-d,cx+d,cy-r,cx,cy-r);path.curveTo(cx-d,cy-r,cx-r,cy-d,cx-r,cy)
+  path.lineTo(cx-r,y+h);path.lineTo(x,y+h);path.close();p.drawPath(path,stroke=1,fill=1)
+ else:p.rect(x,y,w,h,fill=1,stroke=1)
+ for cx,cy,r in holes:
+  p.setFillColor(HexColor('#ffffff'));p.setStrokeColor(HexColor(PURPLE));p.circle(x+cx,y+cy,r,fill=1,stroke=1)
+ if k=='A':
+  for z in [40,180]:p.setFillColor(HexColor(STEEL));p.rect(x-3,y+z-12,10,24,fill=1,stroke=1)
+ pt(x+w/2-20,y-17,f'{w} mm');p.saveState();p.translate(x-12,y+h/2);p.rotate(90);pt(-16,0,f'{h} mm');p.restoreState()
+ pt(cellX,top-(180 if k=='C' else 278),note,10)
+ if k=='C':pt(cellX,top-198,'Ø45 ×2：孔心距後70、150；距下41。',9)
+ if k=='D':pt(cellX,top-296,'Ø45：孔心距後40；距下41。',9)
+ if k=='E':
+  pt(cellX,top-130,'寬45／深63.5／底R22.5',10,PURPLE)
+  pt(cellX,top-148,'從盒外看：中心距左56、距下41。',9)
+  pt(cellX,top-296,'先鑽Ø45，再向上直切；磨邊加軟護邊。',9)
+ if k=='F':
+  pt(cellX,top-130,'Ø30／孔心距外側左119、下33',10,PURPLE)
+  pt(cellX,top-148,'只供電源鍵操作，維修由上蓋進行。',9)
+  pt(cellX,top-296,'電源鍵位置依實際主機重新定位。',9)
+pt(36,103,'上蓋左側兩顆表面鉸鏈，向外掀95°；右側磁吸。前板固定。鉸鏈孔與止擋依五金確認。',10)
+pt(36,84,'後板U口向上開放，線束從上方放入；閉蓋前整理線材與護邊，不可夾線。',10)
+pt(36,65,'鉸鏈側須留約22cm外側與上方淨空，實際依現場驗證。板件外觀視圖；固定件見第2頁。',10)
+pt(W-80,30,'1 / 2',9);p.showPage();p.save();first.seek(0)
+writer=PdfWriter();writer.add_page(PdfReader(first).pages[0]);writer.add_page(PdfReader(buf).pages[0]);writer.add_metadata({'/Title':'豐禾小型主機木盒：上掀蓋與固定件 V10','/Author':'ForHer','/Subject':'參考估算，需實機確認'})
 target=OUT/'豐禾超音波錄影盒-板件與固定件設計圖.pdf'
 with target.open('wb') as f:writer.write(f)
 shutil.copyfile(target,DIST/'豐禾超音波錄影盒-板件設計圖.pdf')

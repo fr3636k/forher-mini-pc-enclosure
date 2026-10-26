@@ -101,14 +101,14 @@ try {
       ],
     },
     box: {
-      camera: [560, 340, 650],
-      target: [90, 50, 45],
-      caption: "02 / 前門維修",
-      title: "開門即可操作電源",
-      copy: "左鉸鏈、右把手、磁吸關門。讀卡機移到右前方，與支撐木條錯開。",
+      camera: [620, 410, 700],
+      target: [20, 85, 35],
+      caption: "02 / 上掀維修",
+      title: "上蓋向左掀，主機直接取出",
+      copy: "左側通風孔上方設鉸鏈，向外掀開 95°；右側磁吸收合。後板 U 形口可從上方放線。",
       specs: [
-        ["門片", "198 × 78 × 9 mm"],
-        ["門縫", "四邊各 2 mm"],
+        ["上掀蓋", "220 × 220 × 9 mm"],
+        ["前板孔", "Ø30 mm，孔位依電源鍵調整"],
         ["板材", "9 mm 夾板"],
       ],
     },
@@ -136,16 +136,16 @@ try {
     },
   };
   const planningPresets={
-    internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；移除上蓋與前門，查看內部空間。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
+    internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；掀開上蓋，即可取出設備；前板固定。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
     size:{...presets.size,caption:"04 / 主機尺寸",detail:''},
     mount:{camera:[-1650,1350,600],target:[-270,760,-215],caption:"04 / 掛鉤與支撐",title:"木盒掛在後方把手左側",copy:"以操作面板正面為準：木盒在後方把手的左側，兩個掛鉤跨住把手左側段。",specs:[["上方","雙 J 掛鉤＋防脫螺栓"],["下方","支撐木條＋雙橡膠墊"],["木條長度","依掛好後的機身間距裁切"]],detail:'<b>為什麼要加木條？</b><p>木盒位於把手左邊外側，兩個上鉤跨在把手左側段。下方短木條靠住機身左側，末端加軟墊止擺。木條暫估跨距60、高30、伸出32 mm；寬高與伸出量均待實機確認。</p><small>照片無法確認把手承重或外殼強度。下方須頂在確認可承壓的位置，避開風口、接頭與薄蓋板；不可靠硬木直接頂壓。尺寸仍為示意。</small>'}
   };
   const routeBase={camera:[-2300,1450,1600],target:[-180,670,-120],caption:"01 / 線路檢視"};
   const routePresets={
-    all:{...routeBase,title:"三條線，各自看清楚",copy:"選擇單一線路，查看起點、穿線孔與主機接頭；木盒自動透明。",specs:[["影像・藍色","HDMI → 擷取卡 → USB"],["讀卡・青色","讀卡機 → 主機 USB"],["電源・橙色","插座 → 變壓器 → DC"]],detail:'<b>三條線分開辨識</b><p>影像線包含擷取卡轉出的 USB，整段同為藍色。讀卡線為青色；電源線為橙色。</p><small>三條線由木盒後板圓孔入盒，右側孔保留備用。孔位固定，實際接頭位置依主機調整。</small>'},
-    video:{...routeBase,camera:[-1600,1150,-1350],target:[-350,780,-230],title:"影像線・藍色",copy:"超音波 HDMI 輸出 → 既有擷取卡 → 小主機 USB。",specs:[["起點","超音波 HDMI OUT"],["中間","擷取卡 HDMI IN → USB"],["終點","主機 USB 影像來源"]],detail:'<b>沿用原擷取概念</b><p>HDMI 經後孔入盒，接擷取卡；擷取卡再以 USB 接主機。兩段都以藍色表示同一條影像路徑。</p><small>主機 HDMI 通常是輸出，不能直接收影像；既有擷取卡的 Windows 相容性仍須實測。</small>'},
-    reader:{...routeBase,camera:[-1700,1250,800],target:[-260,820,-110],title:"讀卡線・青色",copy:"外接讀卡機的 USB 線，沿把手後方進盒，接主機 USB。",specs:[["起點","操作面板左側讀卡機"],["入盒","木盒後板 Ø45 mm 圓孔"],["終點","主機另一個 USB 孔"]],detail:'<b>與影像線分開</b><p>讀卡機直接接主機 USB，不經 HDMI 擷取卡。插拔卡啟停錄影，由電腦上的程式處理。</p><small>走線保留彎曲與維修餘量，不讓接頭承受懸吊重量。</small>'},
-    power:{...routeBase,camera:[-2250,1250,-1450],target:[-380,470,-290],title:"電源線・橙色",copy:"院內核可插座 → 原廠外接變壓器 → 小主機 DC 輸入。",specs:[["插座至變壓器","AC 電源線"],["變壓器位置","盒外獨立托座"],["變壓器至主機","低壓 DC 線穿後孔"]],detail:'<b>只有 DC 線進木盒</b><p>變壓器留在盒外保留散熱，低壓電源線經後孔接主機 DC 插孔。</p><small>變壓器電壓與插頭依實際主機原廠規格；插座與托座位置為示意。</small>'}
+    all:{...routeBase,title:"三條線，各自看清楚",copy:"選擇單一線路，查看起點、穿線孔與主機接頭；木盒自動透明。",specs:[["影像・藍色","HDMI → 擷取卡 → USB"],["讀卡・青色","讀卡機 → 主機 USB"],["電源・橙色","插座 → 變壓器 → DC"]],detail:'<b>三條線分開辨識</b><p>影像線包含擷取卡轉出的 USB，整段同為藍色。讀卡線為青色；電源線為橙色。</p><small>三條線由後板向上開放的 U 形口入盒，不必把接頭穿過圓孔；邊緣加護邊，關蓋前整理餘線。右側孔保留備用。</small>'},
+    video:{...routeBase,camera:[-1600,1150,-1350],target:[-350,780,-230],title:"影像線・藍色",copy:"超音波 HDMI 輸出 → 既有擷取卡 → 小主機 USB。",specs:[["起點","超音波 HDMI OUT"],["中間","擷取卡 HDMI IN → USB"],["終點","主機 USB 影像來源"]],detail:'<b>沿用原擷取概念</b><p>HDMI 經後板 U 形口入盒，接擷取卡；擷取卡再以 USB 接主機。兩段都以藍色表示同一條影像路徑。</p><small>主機 HDMI 通常是輸出，不能直接收影像；既有擷取卡的 Windows 相容性仍須實測。</small>'},
+    reader:{...routeBase,camera:[-1700,1250,800],target:[-260,820,-110],title:"讀卡線・青色",copy:"外接讀卡機的 USB 線，沿把手後方進盒，接主機 USB。",specs:[["起點","操作面板左側讀卡機"],["入盒","後板 U 形口：寬45、深63.5 mm"],["終點","主機另一個 USB 孔"]],detail:'<b>與影像線分開</b><p>讀卡機直接接主機 USB，不經 HDMI 擷取卡。插拔卡啟停錄影，由電腦上的程式處理。</p><small>走線保留彎曲與維修餘量，不讓接頭承受懸吊重量。</small>'},
+    power:{...routeBase,camera:[-2250,1250,-1450],target:[-380,470,-290],title:"電源線・橙色",copy:"院內核可插座 → 原廠外接變壓器 → 小主機 DC 輸入。",specs:[["插座至變壓器","AC 電源線"],["變壓器位置","盒外獨立托座"],["變壓器至主機","低壓 DC 線經 U 形口"]],detail:'<b>只有 DC 線進木盒</b><p>變壓器留在盒外保留散熱，低壓電源線經後板 U 形口接主機 DC 插孔，閉蓋前確認沒有夾線。</p><small>變壓器電壓與插頭依實際主機原廠規格；插座與托座位置為示意。</small>'}
   };
   const hotspotRoot = document.getElementById("hotspots");
   const hotspots = [];
@@ -165,9 +165,11 @@ try {
   addHotspot("把手左側主機盒", product.main, [0, 125, 0], ["overview"]);
   addHotspot("USB 讀卡機", product.reader, [0, 62, 0], ["overview", "box"]);
   addHotspot("超音波機（示意）", cart, [-50, 920, -90], ["overview"]);
-  addHotspot("前門", product.front, [0, 72, 113], ["box"]);
+  addHotspot("向左掀蓋 95°", product.lid, [112, 12, 0], ["box"]);
+  addHotspot("後板 U 形穿線口",product.boards.E,[45,105,-110],["box"]);
+  addHotspot("前板 Ø30 電源操作孔",product.front,[18,42,117],["box"]);
   for (const [id, point] of Object.entries({
-    A: [0, 110, 0],
+    A: [112, 12, 0],
     B: [0, 4.5, 110],
     C: [-110, 65, 0],
     D: [110, 65, 0],
@@ -177,7 +179,7 @@ try {
     addHotspot(
       id +
         " " +
-        { A: "上板", B: "底板", C: "左板", D: "右板", E: "後板", F: "前門" }[
+        { A: "上掀蓋", B: "底板", C: "左板", D: "右板", E: "後板", F: "前板" }[
           id
         ],
       product.boards[id],
@@ -225,7 +227,7 @@ try {
     product.setDoor(degrees);
     const b = document.getElementById("door-toggle");
     b.setAttribute("aria-pressed", String(degrees > 0));
-    b.textContent = degrees > 0 ? "關門" : "開門";
+    b.textContent = degrees > 0 ? "關閉上蓋" : "掀開上蓋";
     invalidateGeometry();
   }
   function setExplode(value) {
@@ -361,12 +363,12 @@ try {
   document.getElementById("door-toggle").addEventListener("click", () => {
     if (view !== "box") {
       setView("box");
-      setDoor(105);
+      setDoor(95);
     } else if (product.getDoor() > 0) {
       setDoor(0);
     } else {
       setExplode(0);
-      setDoor(105);
+      setDoor(95);
     }
     frame();
   });
@@ -395,8 +397,8 @@ try {
     cart.updateMatrixWorld(true);
     const clone = new THREE.Group();
     clone.name = fullScene
-      ? "ForHer V4 - ultrasound and recorder scene"
-      : "ForHer V4 - recorder box and reader";
+      ? "ForHer V10 - ultrasound and recorder scene"
+      : "ForHer V10 - recorder box and reader";
     const productsClone=product.root.clone(true);productsClone.visible=true;clone.add(productsClone);
     if (fullScene) {
       const context = cart.clone(true);
@@ -418,8 +420,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v9-photo-cart.glb";
-    a.download = "forher-recorder-v9-photo-cart.glb";
+    a.href = "./models/forher-recorder-v10-top-lid.glb";
+    a.download = "forher-recorder-v10-top-lid.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);

@@ -1,12 +1,12 @@
 # 豐禾｜超音波錄影盒 3D 設計提案
 
-目前版本：**V9.0**
+目前版本：**V10.0**
 
 公開展示：[https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site](https://forher-ultrasound-enclosure-3d.cloudybun6.chatgpt.site)
 
 公開原始碼：[fr3636k/forher-mini-pc-enclosure](https://github.com/fr3636k/forher-mini-pc-enclosure)
 
-這是一個在瀏覽器中展示超音波錄影盒設計的靜態網站。使用者可以旋轉及縮放 3D 模型、切換展示視角、開關前門、查看六片板件爆炸圖，並下載設計圖與 GLB 模型。
+這是一個在瀏覽器中展示超音波錄影盒設計的靜態網站。使用者可以旋轉及縮放 3D 模型、切換展示視角、開關左掀上蓋、查看六片板件爆炸圖，並下載設計圖與 GLB 模型。
 
 網站只負責設計展示，不會操作診間設備、錄影、讀取健保卡或處理病患資料。
 
@@ -35,7 +35,7 @@
 1. 瀏覽器載入 `index.html`、CSS 與 JavaScript ES Modules。
 2. `index.html` 的 import map 將套件名稱 `three` 對應到本機的 `vendor/three.module.js`。
 3. `model.js` 以毫米為單位，程序化建立木盒、板件、支架、讀卡機、超音波機與線材。
-4. `app.js` 建立 Three.js 場景、相機、燈光與渲染器，並連接視角切換、前門、爆炸圖和標籤等操作。
+4. `app.js` 建立 Three.js 場景、相機、燈光與渲染器，並連接視角切換、上掀蓋、爆炸圖和標籤等操作。
 5. `boards.js` 使用 `window.recorderDesign` 公開介面，把板件卡片的選擇同步到 3D 模型。
 6. 下載按鈕直接提供預先匯出的 GLB，避免在訪客裝置上重新產生大型模型。
 
@@ -244,3 +244,13 @@ cart-view.js 依照片重畫灰藍色操作台、中央觸控面板、鍵盤、�
 爆炸圖包含 A-F 六片箱體、G 雙 J 鉤、H 支撐木條、I 軟墊，卡片可選取與標示，滑桿可拆解全部組件。每鉤暫估高149、伸出53、寬28；木條跨距60、高30、伸出32；軟墊厚4、高30、寬18。單位 mm，全部固定件尺寸為估算，待實機確認。
 
 可下載 PDF 更新為兩頁：箱體板件、固定件與安裝俯視示意。最新模型為 dist/models/forher-recorder-v9-photo-cart.glb。PDF 製圖程式見 scripts/build-design-pdf.py；修改參考尺寸時需同步 equipment-view.js 的 hardwareSpecs 與模型幾何。
+
+
+## V10 上掀維修與 U 形穿線口（目前版本）
+
+前門改為固定前板 202 × 82 × 9 mm，Ø30 電源操作孔位先依示意主機設於盒體 x=18、y=42；換主機須重測。上蓋 220 × 220 × 9 mm，兩顆表面式鉸鏈裝在左側通風孔上方，向左外側掀開95°，右側磁吸閉合；實際鉸鏈、扣件、止擋與開蓋淨空需現場確認。
+
+後板原 Ø45 孔向上切通：U形口寬45、總深63.5、底部R22.5；從盒外看左邊至中心56、下緣至圓弧中心41。邊緣打磨加軟護邊，放入線束後關蓋，不夾線。側板、掛鉤、支撐木條、低位插座與三條分色線路保留。最新模型 dist/models/forher-recorder-v10-top-lid.glb；PDF與SVG以V10為準，舊版檔案僅供歷史參考。
+
+
+V10 製圖與模型重製：執行 python scripts/build-design-pdf.py 可重製兩頁 PDF、板件 SVG 和網頁卡片；執行 node scripts/export-model.mjs 可檢查上蓋運動／孔型並匯出 GLB。GLB 的箱體使用實際來源幾何，木紋轉為純木色，文字貼圖省略。

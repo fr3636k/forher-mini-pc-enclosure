@@ -77,13 +77,13 @@ export function buildExternalIO() {
   for(const x of [-235,-135]) box(power,'Adapter cradle side lip',[4,16,55],[x,420,-245]);
   tube(power,'AC - outlet to original adapter',[[-760,140,-401],[-680,85,-400],[-410,95,-370],[-270,290,-310],[-230,430,-245]],3.1,'#cc8b32');
   // Rear-panel hole centre is installation.box + [45,50,-110].
-  tube(power,'DC - adapter through enclosure hole to PC DC input',[[-140,430,-245],[-140,560,-430],[-330,650,-450],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
+  tube(power,'DC - adapter through enclosure U notch to PC DC input',[[-140,430,-245],[-140,560,-430],[-330,650,-450],mountedPoint([50,50,-110]),mountedPoint([-15,43,-40])],2.4,'#cc8b32');
   box(power,'PC DC socket indicative',[9,8,4],mountedPoint([-15,43,-40]),materials.rubber);
   const video=group('Video route - HDMI capture and its USB output'); root.add(video);
   tube(video,'HDMI - ultrasound to existing capture input',[[-306.9,759.5,-186],[-350,790,-390],[-360,770,-430],mountedPoint([35,50,-110]),mountedPoint([67,25,-36])],3,'#3e7ed4');
   tube(video,'Video USB - capture to PC',[[67,25,62],[90,24,80],[90,24,-75],[-65,30,-75],[-64,43,87]].map(mountedPoint),2,'#3e7ed4');
   const reader=group('Card reader USB route'); root.add(reader);
-  tube(reader,'Reader USB - through enclosure hole to PC',[[-370,943,137],[-440,925,-50],[-450,850,-420],[-400,740,-405],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
+  tube(reader,'Reader USB - through enclosure U notch to PC',[[-370,943,137],[-440,925,-50],[-450,850,-420],[-400,740,-405],mountedPoint([45,50,-110]),mountedPoint([-43,43,87])],2.2,'#22988b');
   root.userData={units:'mm',adapterDimensionsAssumed:true,outletPositionAssumed:true,sharedMedicalPowerNotValidated:true};
   function setRoute(route) {
     power.visible=route==='all'||route==='power';
@@ -94,7 +94,7 @@ export function buildExternalIO() {
 }
 
 function fadeCase(main,opacity=.12) {
-  for(const prefix of ['A Top','B Bottom','C Left','D Right','E Rear','Front door hinge']) {
+  for(const prefix of ['Top lid hinge','B Bottom','C Left','D Right','E Rear','F Fixed front']) {
     main.children.find(n=>n.name.startsWith(prefix))?.traverse(o=>{
       if(o.isMesh&&o.material?.isMeshStandardMaterial) {
         o.material=o.material.clone(); o.material.transparent=true; o.material.opacity=opacity;
@@ -107,7 +107,7 @@ export function buildPlanningView(product,cart) {
   const root=group('Equipment and size planning views');
   const internal=group('Interior equipment placed on base pads'); root.add(internal);
   const cutaway=product.main.clone(true); cutaway.position.set(0,0,0); fadeCase(cutaway);
-  for(const prefix of ['A Top','Front door hinge','Right-side twin J']) cutaway.children.find(n=>n.name.startsWith(prefix)).visible=false;
+  for(const prefix of ['Top lid hinge','Right-side twin J']) cutaway.children.find(n=>n.name.startsWith(prefix))?.traverse(o=>o.visible=false);
   internal.add(cutaway);
   const hook=group('Enclosure on the left side of the rear handle'); root.add(hook);
   const profileCart=cart.clone(true);profileCart.visible=true;
