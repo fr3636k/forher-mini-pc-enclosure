@@ -139,7 +139,7 @@ try {
       copy: "板件 A-F；固定件 G-I。尺寸與數量依同一比例呈現，金屬鉤與木條為參考估算。",
       specs: [
         ["箱體 A-F", "6 片，板厚 9 mm"],
-        ["固定件 G-I", "J 鉤 2、木條 1、軟墊 2"],
+        ["固定件 G-I", "J 鉤 2、木條1＋端墊塊1、軟墊2"],
         ["尺寸狀態", "估算示意，待實機確認"],
       ],
     },
@@ -157,7 +157,7 @@ try {
   const planningPresets={
     internal:{camera:[450,350,520],target:[0,45,0],caption:"04 / 盒內設備",title:"主機與擷取卡直接放入",copy:"設備放在防滑墊上；掀開上蓋，即可取出設備；前板固定。",specs:[["小主機","124 × 124 × 53.7 mm"],["擷取卡","45 × 90 × 20 mm 示意"],["變壓器","盒外獨立托座"]],detail:'<b>盒內配置</b><p>主機與擷取卡直接放置，不加束帶。底部鋪防滑墊，接頭留餘線，保留原廠風口。</p><small>防滑墊不等於鎖固；推車移動時，須實測設備是否滑動。設備尺寸依實物確認。</small>'},
     size:{...presets.size,caption:"04 / 主機尺寸",detail:''},
-    mount:{camera:[-1550,1130,820],target:[-325,725,-165],caption:"04 / 掛鉤與前伸支撐",title:"先向前跨過懸空區，再靠住機身",copy:"木盒仍掛在後把手左側。下方木條沿機器前方延伸，兩塊軟墊在前端接觸機身側面。",specs:[["支撐方向","向機器前方，不只是側向加厚"],["示意木條","總長150 × 厚30 × 高30 mm"],["固定／突出","約50／100 mm，待實機確認"]],detail:'<b>把手下方是懸空的</b><p>支撐臂先固定在木盒側面下緣，再向前跨過空隙；前端軟墊靠機身左側，防止木盒傾斜。木條總長15公分，包含5公分固定段與10公分突出段；截面3 × 3公分。</p><small>15公分為討論上限；軟墊示意厚6 mm，依側向間隙調整。實機若碰不到機身，須調整掛位或重新設計；固定強度與接觸面仍須現場確認。</small>'},
+    mount:{camera:[-1550,1130,820],target:[-325,725,-165],caption:"04 / 掛鉤與前伸支撐",title:"先向前跨過懸空區，再靠住機身",copy:"木盒仍掛在後把手左側。下方木條沿機器前方延伸，兩塊軟墊在前端接觸機身側面。",specs:[["支撐方向","向機器前方，不只是側向加厚"],["示意木條","總長150 × 厚10 × 高30 mm"],["固定／突出","約50／100 mm，待實機確認"]],detail:'<b>把手下方是懸空的</b><p>支撐臂先固定在木盒側面下緣，再向前跨過空隙；前端軟墊靠機身左側，防止木盒傾斜。木條長15、厚1、高3公分；含5公分固定段與10公分突出段。前端另加2公分局部墊塊，不把整根加厚。</p><small>端墊塊示意42 × 20 × 30 mm，軟墊厚6 mm；依實際間隙調整。1公分木條的剛性、固定及端墊塊接合方式須木工確認，非承重定稿。</small>'},
   };
   const routeBase={camera:[-2300,1450,1600],target:[-180,670,-120],caption:"01 / 線路檢視"};
   const routePresets={
@@ -206,7 +206,8 @@ try {
       ["inside"],
     );
   addHotspot('G 雙 J 鉤 ×2 · 高149／出53／寬28（估）',product.boards.G,[145,215,25],['inside']);
-  addHotspot('H 前伸臂 · 長150／厚30／高30（估）',product.boards.H,[135,45,135],['inside']);
+  addHotspot('H 前伸臂 · 長150／厚10／高30（估）',product.boards.H,[115,45,135],['inside']);
+  addHotspot('H2 端墊塊 · 長42／厚20／高30（估）',product.endPackingBlock,[0,26,0],['inside']);
   addHotspot('I 軟墊 ×2 · 厚6／高30／寬18（估）',product.boards.I,[160,35,192],['inside']);
   addHotspot("寬 14 cm",sizeView,[0,4,101],["plan-size"]);
   addHotspot("深 14 cm",sizeView,[103,4,0],["plan-size"]);
@@ -428,8 +429,8 @@ try {
     cart.updateMatrixWorld(true);
     const clone = new THREE.Group();
     clone.name = fullScene
-      ? "ForHer V12 - ultrasound and recorder scene"
-      : "ForHer V12 - recorder box and reader";
+      ? "ForHer V13 - ultrasound and recorder scene"
+      : "ForHer V13 - recorder box and reader";
     const productsClone=product.root.clone(true);productsClone.visible=true;clone.add(productsClone);
     if (fullScene) {
       const context = cart.clone(true);
@@ -451,8 +452,8 @@ try {
   // The complete scene is pre-exported so downloads do not rebuild textures on the visitor's device.
   document.getElementById("download").addEventListener("click", () => {
     const a = document.createElement("a");
-    a.href = "./models/forher-recorder-v12-15cm-support.glb";
-    a.download = "forher-recorder-v12-15cm-support.glb";
+    a.href = "./models/forher-recorder-v13-1cm-support.glb";
+    a.download = "forher-recorder-v13-1cm-support.glb";
     a.click();
   });
   new ResizeObserver(frame).observe(stage);

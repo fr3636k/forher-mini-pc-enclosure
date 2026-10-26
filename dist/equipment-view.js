@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // All dimensions are illustrative millimetres until the actual handle and shell are measured.
-export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{length:150,height:30,projection:30,fixedOverlap:50,forwardOverhang:100,quantity:1},pad:{width:18,height:30,thickness:6,quantity:2},allDimensionsEstimated:true};
+export const hardwareSpecs={hook:{height:149,projection:53,width:28,plate:4,bridge:5,opening:43,quantity:2},wood:{length:150,height:30,projection:10,fixedOverlap:50,forwardOverhang:100,quantity:1},endBlock:{length:42,height:30,thickness:20,quantity:1},pad:{width:18,height:30,thickness:6,quantity:2},allDimensionsEstimated:true};
 export const installation = {
   box: [-433, 650, -260], reader: [-410, 930, 185], rotationY: 0,
   handleDiameterMm: 24, adapterEnvelopeMm: [90, 35, 45], supportArmLengthMm: 150, supportForwardOverhangMm: 100,
@@ -43,7 +43,8 @@ export function buildFixings() {
   // +Z points toward the operator/front of the ultrasound machine.
   // The first 50 mm is beside the box; the next 100 mm bridges the rear handle void.
   const wood=group('H forward support arm - estimated length 150');mounting.add(wood);
-  box(wood,'Forward support arm 150L 30W 30H - spans rear void',[30,30,150],[125,25,135],materials.wood);
+  box(wood,'Forward support arm 150L 10W 30H - spans rear void',[10,30,150],[115,25,135],materials.wood);
+  box(wood,'End packing block 42L 20W 30H - provisional',[20,30,42],[130,25,186],materials.wood);
   for(const z of [72,98]) screw(wood,109,25,z);
   const pads=group('I forward end contact pads - 2 pieces');mounting.add(pads);
   for(const z of [174,198]) box(pads,'Rubber contact pad - front end at real shell',[6,30,18],[143,25,z],materials.rubber);
